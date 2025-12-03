@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/sf-pro-display");
+
 @import 'tailwindcss';
 @config '../tailwind.config.ts';
 
@@ -69,10 +71,9 @@
   --color-neutral-900: #181d27;
   --color-neutral-950: #0a0d12;
 
-  --color-primary-100: #e5f4fb;
-  --color-primary-200: #6fcfff;
-  --color-primary-300: #0093dd;
-  --color-primary-400: #050a1b;
+  --color-primary-100: #F6F9FE;
+  --color-primary-200: #7F51F9;
+  --color-primary-300: #6936F2;
 
   --color-accent-red: #D9206E;
   --color-accent-green: #079455;
@@ -191,9 +192,8 @@ html {
 }
 
 body {
-  @apply bg-white text-sm font-normal text-neutral-950;
-
-  font-family: var(--font-poppins);
+  @apply bg-black text-sm font-normal text-neutral-25;
+  font-family: "SF Pro Display", sans-serif;
 }
 
 @layer components {
