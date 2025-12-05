@@ -1,5 +1,12 @@
+import HomeContainer from "./partials/home-container";
+import Timeline from "./partials/timeline";
+
 const Home = () => {
-  return <div></div>;
+  return (
+    <HomeContainer>
+      <Timeline />
+    </HomeContainer>
+  );
 };
 
 export default Home;
