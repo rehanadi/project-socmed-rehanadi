@@ -10,8 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import PostActions from "@/features/posts/components/post-actions";
 import PostAuthor from "@/features/posts/components/post-author";
 import { Icon } from "@iconify/react";
-import { Ellipsis, Menu } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 interface ModalAddCommentProps {
   isOpen: boolean;
@@ -22,6 +24,20 @@ const ModalAddComment = ({
   isOpen,
   onClose,
 }: ModalAddCommentProps) => {
+  const [comment, setComment] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setComment(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(comment);
+    setComment("");
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='md:w-300 md:max-w-[calc(100%-6rem)]'>
@@ -52,7 +68,7 @@ const ModalAddComment = ({
                 </div>
 
                 <p className="text-sm">
-                  Creating unforgettable moments with my favorite person! 📸✨ Every laugh, every little adventure, every quiet moment together feels like magic. You make ordinary days feel extraordinary, and I’m so grateful to share this journey with you. Let’s keep cherishing every second, because with you, time always feels too short. 💕
+                  Creating unforgettable moments with my favorite person! 📸✨ Every laugh, every little adventure, every quiet moment together feels like magic. You make ordinary days feel extraordinary, and I'm so grateful to share this journey with you. Let's keep cherishing every second, because with you, time always feels too short. 💕
                 </p>
               </div>
 
@@ -102,17 +118,36 @@ const ModalAddComment = ({
                 shares={20}
               />
 
-              <form className="flex-between gap-2">
-                <div className="shrink-0 size-12 border border-neutral-900 rounded-xl flex-center">
-                  <Icon icon="proicons:emoji" className="size-6" />
+              <form onSubmit={handleSubmit} className="flex-between gap-2 relative">
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="shrink-0 size-12 border border-neutral-900 rounded-xl flex-center hover:bg-neutral-900/10 transition-colors cursor-pointer"
+                  >
+                    <Icon icon="proicons:emoji" className="size-6" />
+                  </button>
+
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-full left-0 mb-2 z-50">
+                      <EmojiPicker
+                        onEmojiClick={handleEmojiClick}
+                        width={350}
+                        height={400}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-1 size-12 px-4 border border-neutral-900 rounded-xl flex-between">
                   <Input
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
                     placeholder="Add Comment"
                     className="p-0 border-0 text-md font-medium flex-1 placeholder:text-neutral-600"
                   />
                   <Button
+                    type="submit"
                     variant="outline"
                     className="shrink-0 border-0"
                   >
