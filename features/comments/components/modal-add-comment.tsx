@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,8 +13,6 @@ import PostActions from "@/features/posts/components/post-actions";
 import PostAuthor from "@/features/posts/components/post-author";
 import { Icon } from "@iconify/react";
 import { Ellipsis } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 interface ModalAddCommentProps {
@@ -40,18 +40,20 @@ const ModalAddComment = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='md:w-300 md:max-w-[calc(100%-6rem)]'>
-        <div className="flex-center">
-          <div className="basis-720/1200 relative aspect-square">
+      <DialogContent className='md:w-300 md:max-w-[calc(100vw-6rem)]'>
+        <div className="flex-center h-[70vh] max-h-[calc(100vh-6rem)]">
+          <div className="basis-72/120 h-full relative">
             <Image
               src='/images/posts/post-1.png'
               alt="Post image"
               fill
+              className="object-cover"
             />
           </div>
 
           <div className="flex-1 h-full p-5 flex flex-col gap-4">
-            <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
+            {/* Scrollable */}
+            <div className="flex-1 flex flex-col gap-4 pr-1 overflow-y-auto scrollbar-thin">
               <div className="flex flex-col gap-2">
                 <div className="flex-between gap-4">
                   <PostAuthor
@@ -77,40 +79,77 @@ const ModalAddComment = ({
               <div className="flex flex-col items-start gap-4">
                 <h3 className="font-bold text-md">Comments</h3>
 
-                <div className="flex flex-col items-start gap-2.5">
-                  <PostAuthor
-                    author={{
-                      id: 2,
-                      name: 'Alexander',
-                      avatar: '/images/avatar-2.png',
-                    }}
-                    createdAt='1 Minute ago'
-                    size="small"
-                  />
-                  <p className="text-sm">
-                    This is the kind of love everyone dreams about ✨
-                  </p>
-                </div>
+                <div className="flex flex-col items-start gap-4 w-full">
+                  <div className="flex flex-col items-start gap-2.5">
+                    <PostAuthor
+                      author={{
+                        id: 2,
+                        name: 'Alexander',
+                        avatar: '/images/avatar-2.png',
+                      }}
+                      createdAt='1 Minute ago'
+                      size="small"
+                    />
+                    <p className="text-sm">
+                      This is the kind of love everyone dreams about ✨
+                    </p>
+                  </div>
 
-                <Separator />
+                  <Separator />
 
-                <div className="flex flex-col items-start gap-2.5">
-                  <PostAuthor
-                    author={{
-                      id: 2,
-                      name: 'Alexander',
-                      avatar: '/images/avatar-2.png',
-                    }}
-                    createdAt='1 Minute ago'
-                    size="small"
-                  />
-                  <p className="text-sm">
-                    This is the kind of love everyone dreams about ✨
-                  </p>
+                  <div className="flex flex-col items-start gap-2.5">
+                    <PostAuthor
+                      author={{
+                        id: 2,
+                        name: 'Alexander',
+                        avatar: '/images/avatar-2.png',
+                      }}
+                      createdAt='1 Minute ago'
+                      size="small"
+                    />
+                    <p className="text-sm">
+                      This is the kind of love everyone dreams about ✨
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex flex-col items-start gap-2.5">
+                    <PostAuthor
+                      author={{
+                        id: 2,
+                        name: 'Alexander',
+                        avatar: '/images/avatar-2.png',
+                      }}
+                      createdAt='1 Minute ago'
+                      size="small"
+                    />
+                    <p className="text-sm">
+                      This is the kind of love everyone dreams about ✨
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex flex-col items-start gap-2.5">
+                    <PostAuthor
+                      author={{
+                        id: 2,
+                        name: 'Alexander',
+                        avatar: '/images/avatar-2.png',
+                      }}
+                      createdAt='1 Minute ago'
+                      size="small"
+                    />
+                    <p className="text-sm">
+                      This is the kind of love everyone dreams about ✨
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Fixed */}
             <div className="shrink-0 flex flex-col gap-4">
               <PostActions
                 likes={20}
