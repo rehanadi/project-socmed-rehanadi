@@ -146,7 +146,7 @@ const SearchBox = ({
       <Input
         type='text'
         placeholder='Search'
-        className='flex-1 p-0 border-0 outline-none'
+        className='flex-1 p-0 border-0 outline-none placeholder:text-neutral-600'
       />
     </div>
   );

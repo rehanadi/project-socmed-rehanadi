@@ -199,7 +199,7 @@ body {
 @layer components {
   .custom-container {
     margin: 0 auto;
-    @apply max-w-302 pr-6 pl-6;
+    @apply max-w-300 px-6;
   }
 }
 
