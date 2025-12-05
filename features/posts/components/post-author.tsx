@@ -26,7 +26,7 @@ const PostAuthor = ({
     >
       <Avatar
         className={cn(
-          size === 'small' ? 'size-8 md:size-10' : 'size-11 md:size-16'
+          size === 'small' ? 'size-10' : 'size-11 md:size-16'
         )}
       >
         <AvatarImage src={author.avatar} />
@@ -39,8 +39,8 @@ const PostAuthor = ({
         <Link href={`/authors/${author.id}`}>
           <h3
             className={cn(
-              "text-sm font-bold",
-              size === 'small' ? 'md:text-sm' : 'md:text-md'
+              "",
+              size === 'small' ? 'text-xs md:text-sm font-semibold md:font-bold' : 'font-bold text-sm md:text-md'
             )}
           >
             {author.name}

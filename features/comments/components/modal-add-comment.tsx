@@ -14,6 +14,7 @@ import PostAuthor from "@/features/posts/components/post-author";
 import { Icon } from "@iconify/react";
 import { Ellipsis } from "lucide-react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import CommentItem from "./comment-item";
 
 interface ModalAddCommentProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const ModalAddComment = ({
 }: ModalAddCommentProps) => {
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const isEmpty = false;
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setComment(prev => prev + emojiData.emoji);
@@ -41,8 +43,8 @@ const ModalAddComment = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='md:w-300 md:max-w-[calc(100vw-6rem)]'>
-        <div className="flex-center h-[70vh] max-h-[calc(100vh-6rem)]">
-          <div className="basis-72/120 h-full relative">
+        <div className="flex-center max-h-[70vh]">
+          <div className="hidden md:block basis-72/120 h-full relative">
             <Image
               src='/images/posts/post-1.png'
               alt="Post image"
@@ -53,8 +55,8 @@ const ModalAddComment = ({
 
           <div className="flex-1 h-full p-5 flex flex-col gap-4">
             {/* Scrollable */}
-            <div className="flex-1 flex flex-col gap-4 pr-1 overflow-y-auto scrollbar-thin">
-              <div className="flex flex-col gap-2">
+            <div className="flex-1 flex flex-col gap-4 pr-2 overflow-y-auto scrollbar-thin">
+              <div className="hidden md:flex flex-col gap-2">
                 <div className="flex-between gap-4">
                   <PostAuthor
                     author={{
@@ -74,78 +76,77 @@ const ModalAddComment = ({
                 </p>
               </div>
 
-              <Separator />
+              <Separator className="hidden md:block" />
 
               <div className="flex flex-col items-start gap-4">
                 <h3 className="font-bold text-md">Comments</h3>
 
-                <div className="flex flex-col items-start gap-4 w-full">
-                  <div className="flex flex-col items-start gap-2.5">
-                    <PostAuthor
+                {isEmpty ? (
+                  <div className="w-full h-[155px] flex-center flex-col">
+                    <h4 className="font-bold text-md">No Comments yet</h4>
+                    <p className="text-sm text-neutral-400">Start the conversation</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-start gap-4 w-full">
+                    <CommentItem
                       author={{
                         id: 2,
                         name: 'Alexander',
                         avatar: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
-                      size="small"
+                      text="This is the kind of love everyone dreams about ✨"
                     />
-                    <p className="text-sm">
-                      This is the kind of love everyone dreams about ✨
-                    </p>
-                  </div>
+                    
+                    <Separator />
 
-                  <Separator />
-
-                  <div className="flex flex-col items-start gap-2.5">
-                    <PostAuthor
+                    <CommentItem
                       author={{
                         id: 2,
                         name: 'Alexander',
                         avatar: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
-                      size="small"
+                      text="This is the kind of love everyone dreams about ✨"
                     />
-                    <p className="text-sm">
-                      This is the kind of love everyone dreams about ✨
-                    </p>
-                  </div>
+                    
+                    <Separator />
 
-                  <Separator />
-
-                  <div className="flex flex-col items-start gap-2.5">
-                    <PostAuthor
+                    <CommentItem
                       author={{
                         id: 2,
                         name: 'Alexander',
                         avatar: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
-                      size="small"
+                      text="This is the kind of love everyone dreams about ✨"
                     />
-                    <p className="text-sm">
-                      This is the kind of love everyone dreams about ✨
-                    </p>
-                  </div>
+                    
+                    <Separator />
 
-                  <Separator />
-
-                  <div className="flex flex-col items-start gap-2.5">
-                    <PostAuthor
+                    <CommentItem
                       author={{
                         id: 2,
                         name: 'Alexander',
                         avatar: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
-                      size="small"
+                      text="This is the kind of love everyone dreams about ✨"
                     />
-                    <p className="text-sm">
-                      This is the kind of love everyone dreams about ✨
-                    </p>
+                    
+                    <Separator />
+
+                    <CommentItem
+                      author={{
+                        id: 2,
+                        name: 'Alexander',
+                        avatar: '/images/avatar-2.png',
+                      }}
+                      createdAt='1 Minute ago'
+                      text="This is the kind of love everyone dreams about ✨"
+                    />
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -155,7 +156,10 @@ const ModalAddComment = ({
                 likes={20}
                 comments={20}
                 shares={20}
+                className="hidden md:flex"
               />
+
+              <Separator className="block md:hidden" />
 
               <form onSubmit={handleSubmit} className="flex-between gap-2 relative">
                 <div className="relative">
@@ -188,7 +192,8 @@ const ModalAddComment = ({
                   <Button
                     type="submit"
                     variant="outline"
-                    className="shrink-0 border-0"
+                    disabled={!comment.trim()}
+                    className="shrink-0 border-0 text-primary-200 disabled:text-neutral-600"
                   >
                     Post
                   </Button>

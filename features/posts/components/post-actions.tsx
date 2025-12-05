@@ -1,18 +1,21 @@
 import { Icon } from "@iconify/react"
+import { cn } from "@/lib/utils";
 
 interface PostActionsProps {
   likes: number;
   comments: number;
   shares: number;
+  className?: string;
 }
 
 const PostActions = ({
   likes,
   comments,
   shares,
+  className,
 }: PostActionsProps) => {
   return (
-    <div className="w-full flex-between gap-4">
+    <div className={cn("w-full items-center justify-between gap-4", className)}>
       <div className="flex-1 flex-start gap-3 md:gap-4">
         <div className="flex-start gap-1.5">
           <Icon icon="solar:heart-linear" className="size-6 cursor-pointer" />
