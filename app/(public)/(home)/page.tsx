@@ -1,5 +1,6 @@
 "use client";
 
+import ModalLikes from "@/features/likes/components/modal-likes";
 import HomeContainer from "./partials/home-container";
 import Timeline from "./partials/timeline";
 import ModalComments from "@/features/comments/components/modal-comments";
@@ -11,6 +12,7 @@ const Home = () => {
       <Timeline />
       <FloatingMenus />
       <ModalComments isOpen={false} onClose={() => {}} />
+      <ModalLikes isOpen={false} onClose={() => {}} />
     </HomeContainer>
   );
 };
