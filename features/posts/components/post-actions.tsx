@@ -15,7 +15,7 @@ const PostActions = ({
   className,
 }: PostActionsProps) => {
   return (
-    <div className={cn("w-full items-center justify-between gap-4", className)}>
+    <div className={cn("w-full flex items-center justify-between gap-4", className)}>
       <div className="flex-1 flex-start gap-3 md:gap-4">
         <div className="flex-start gap-1.5">
           <Icon icon="solar:heart-linear" className="size-6 cursor-pointer" />

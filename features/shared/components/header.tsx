@@ -137,7 +137,7 @@ const SearchBox = ({
   return (
     <div
       className={cn(
-        'h-10 md:h-12 w-[491px] items-center gap-1 rounded-full bg-neutral-950 border border-neutral-900 px-4 md:gap-1.5',
+        'h-10 md:h-12 w-2/5 items-center gap-1 rounded-full bg-neutral-950 border border-neutral-900 px-4 md:gap-1.5',
         className
       )}
     >

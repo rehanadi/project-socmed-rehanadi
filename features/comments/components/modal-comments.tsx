@@ -16,15 +16,15 @@ import { Ellipsis } from "lucide-react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import CommentItem from "./comment-item";
 
-interface ModalAddCommentProps {
+interface ModalCommentsProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ModalAddComment = ({
+const ModalComments = ({
   isOpen,
   onClose,
-}: ModalAddCommentProps) => {
+}: ModalCommentsProps) => {
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const isEmpty = false;
@@ -207,4 +207,4 @@ const ModalAddComment = ({
   )
 }
 
-export default ModalAddComment
+export default ModalComments
