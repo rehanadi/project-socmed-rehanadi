@@ -19,9 +19,7 @@ const LikeItem = ({
   return (
     <div className="flex-between gap-4">
       <div className="flex-center gap-2">
-        <Avatar
-          className="size-12"
-        >
+        <Avatar className="size-12">
           <AvatarImage src={user.avatar} />
           <AvatarFallback>
             {user.name}

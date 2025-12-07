@@ -6,7 +6,7 @@ import Timeline from "./partials/timeline";
 import ModalComments from "@/features/comments/components/modal-comments";
 import FloatingMenus from "@/features/shared/components/floating-menus";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <HomeContainer>
       <Timeline />
@@ -17,4 +17,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
