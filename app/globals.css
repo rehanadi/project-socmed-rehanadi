@@ -192,7 +192,7 @@ html {
 }
 
 body {
-  @apply bg-black text-sm font-normal text-neutral-25;
+  @apply min-h-screen bg-black text-sm font-normal text-neutral-25;
   font-family: "SF Pro Display", sans-serif;
 }
 
