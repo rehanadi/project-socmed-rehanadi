@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { authService } from './services';
 import { RegisterPayload, LoginPayload } from './types';
 import { getErrorMessage } from '@/lib/api';
+import { useAppDispatch } from '@/lib/hooks';
+import { setCredentials } from './stores';
 
 export const useRegister = () => {
   const router = useRouter();
@@ -22,13 +24,17 @@ export const useRegister = () => {
 
 export const useLogin = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   return useMutation({
     mutationFn: (payload: LoginPayload) => authService.login(payload),
     onSuccess: (data) => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('token', data.data.token);
-      }
+      dispatch(
+        setCredentials({
+          token: data.data.token,
+          user: data.data.user,
+        })
+      );
       
       toast.success('Login successful!');
       router.push('/');
