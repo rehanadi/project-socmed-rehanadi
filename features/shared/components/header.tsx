@@ -14,8 +14,13 @@ import { useAppSelector } from '@/lib/hooks';
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const user = useAppSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (showSearch) {
@@ -42,7 +47,7 @@ const Header = () => {
 
             <SearchBox className="hidden md:flex" />
 
-            {isAuthenticated ? (
+            {mounted && isAuthenticated ? (
               <div className="flex-center gap-4">
                 <SearchIcon onClick={() => setShowSearch(true)} />
 

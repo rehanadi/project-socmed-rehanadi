@@ -1,14 +1,26 @@
 export interface Post {
   id: number;
+  imageUrl: string;
   caption: string;
-  image: string;
+  createdAt: string;
   author: {
     id: number;
+    username: string;
     name: string;
-    avatar: string;
+    avatarUrl: string | null;
   };
-  createdAt: string;
-  likes: number;
-  comments: number;
-  shares: number;
+  likeCount: number;
+  commentCount: number;
+  likedByMe: boolean;
+}
+
+export interface AddPostPayload {
+  image: File;
+  caption: string;
+}
+
+export interface AddPostResponse {
+  success: boolean;
+  message: string;
+  data: Post;
 }
