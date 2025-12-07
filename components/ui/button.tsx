@@ -13,6 +13,10 @@ const buttonVariants = cva(
           'bg-primary-300 font-bold text-sm md:text-md rounded-full hover:opacity-90 transition-colors',
         outline:
           'bg-transparent font-bold text-sm md:text-md border border-neutral-900 rounded-full hover:bg-neutral-900 transition-colors',
+        secondary:
+          'bg-neutral-900 font-medium text-sm md:text-md rounded-lg hover:bg-neutral-950 transition-colors',
+        danger:
+          'bg-neutral-900 font-medium text-accent-red text-sm md:text-md rounded-lg hover:bg-neutral-950 transition-colors',
       },
       size: {
         default: 'h-10 md:h-11 px-2',
