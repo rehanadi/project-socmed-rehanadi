@@ -1,7 +1,11 @@
 import Logo from "@/features/shared/components/logo";
 import Link from "next/link";
 
-const RegisterHeader = () => {
+interface AuthHeaderProps {
+  title: string;
+}
+
+const AuthHeader = ({ title }: AuthHeaderProps) => {
   return (
     <>
       <Link href="/">
@@ -9,10 +13,10 @@ const RegisterHeader = () => {
       </Link>
 
       <h1 className="font-bold text-xl md:text-display-xs text-center">
-        Register
+        {title}
       </h1>
     </>
   );
 };
 
-export default RegisterHeader;
+export default AuthHeader;

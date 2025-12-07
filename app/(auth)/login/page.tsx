@@ -1,13 +1,13 @@
-import LoginContainer from "./partials/login-container"
-import LoginForm from "./partials/login-form"
-import LoginHeader from "./partials/login-header"
+import AuthContainer from "@/features/auth/components/auth-container";
+import AuthHeader from "@/features/auth/components/auth-header";
+import LoginForm from "@/features/auth/components/login-form";
 
 const LoginPage = () => {
   return (
-    <LoginContainer>
-      <LoginHeader />
+    <AuthContainer>
+      <AuthHeader title="Welcome Back!" />
       <LoginForm />
-    </LoginContainer>
+    </AuthContainer>
   );
 };
 
