@@ -5,6 +5,8 @@ import { Separator } from "@radix-ui/react-separator"
 import Link from "next/link"
 
 const ProfileInfo = () => {
+  const isFollowing = false;
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col md:flex-row items-start md:justify-between md:items-center gap-3">
@@ -28,15 +30,19 @@ const ProfileInfo = () => {
         </div>
 
         <div className="w-full md:w-auto flex-between gap-3">
-          <Button
-            variant="outline"
-            className="flex-1 px-5.5"
-            asChild
-          >
-            <Link href="/profile/edit">
-              Edit Profile
-            </Link>
-          </Button>
+          {isFollowing ? (
+            <Button
+              variant="outline"
+              className="flex-1 flex-center gap-2 px-4"
+            >
+              <Icon icon="material-symbols:check-circle-outline-rounded" className="size-5" />
+              <span>Following</span>
+            </Button>
+          ) : (
+            <Button className="flex-1 px-6 h-10 md:h-12">
+              Follow
+            </Button>
+          )}
           <Button
             variant="outline"
             className="shrink-0"
