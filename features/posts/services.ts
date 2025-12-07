@@ -1,6 +1,6 @@
 import { api } from '@/lib/api';
-import { API_POSTS_URL } from '@/features/shared/constants/api-url';
-import { AddPostPayload, AddPostResponse } from './types';
+import { API_POSTS_URL, API_FEED_URL } from '@/features/shared/constants/api-url';
+import { AddPostPayload, AddPostResponse, GetFeedResponse } from './types';
 
 export const postsService = {
   addPost: async (payload: AddPostPayload): Promise<AddPostResponse> => {
@@ -13,6 +13,14 @@ export const postsService = {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+    return response.data;
+  },
+
+  getFeed: async (page: number, limit: number): Promise<GetFeedResponse> => {
+    const response = await api.get<GetFeedResponse>(
+      `${API_FEED_URL}?page=${page}&limit=${limit}`
+    );
 
     return response.data;
   },

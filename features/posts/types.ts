@@ -24,3 +24,26 @@ export interface AddPostResponse {
   message: string;
   data: Post;
 }
+
+export interface GetFeedResponse {
+  success: boolean;
+  message: string;
+  data: {
+    items: Post[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}
+
+export interface PostsState {
+  posts: Post[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasMore: boolean;
+}
