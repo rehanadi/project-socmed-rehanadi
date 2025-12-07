@@ -57,7 +57,7 @@ const AddPostForm = () => {
           )}
         </div>
 
-        <span className="text-accent-red font-medium text-sms">
+        <span className="text-accent-red font-medium text-sm">
           Error Text Helper
         </span>
       </div>
@@ -70,10 +70,10 @@ const AddPostForm = () => {
         <Textarea
           id="caption"
           placeholder="Create your caption"
-          className="min-h-[101px] max-h-100 bg-neutral-950 px-4 py-2 border border-neutral-900 rounded-xl text-md placeholder:text-neutral-600"
+          className="min-h-[101px] max-h-100"
         />
 
-        <span className="text-accent-red font-medium text-sms">
+        <span className="text-accent-red font-medium text-sm">
           Error Text Helper
         </span>
       </div>
