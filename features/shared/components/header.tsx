@@ -128,10 +128,12 @@ const AuthButtons = ({ className }: { className?: string }) => {
 
 const SearchIcon = ({ onClick }: { onClick: () => void }) => {
   return (
-    <Search
-      className="block size-5 shrink-0 text-neutral-25 md:hidden cursor-pointer"
-      onClick={onClick}
-    />
+    <>
+      <Search
+        className="block size-5 shrink-0 text-neutral-25 md:hidden cursor-pointer"
+        onClick={onClick}
+      />
+    </>
   );
 };
 
