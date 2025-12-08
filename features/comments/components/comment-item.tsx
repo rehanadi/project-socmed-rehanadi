@@ -4,7 +4,7 @@ interface CommentItemProps {
   author: {
     id: number;
     name: string;
-    avatar: string;
+    avatarUrl: string;
   };
   createdAt: string;
   text: string;

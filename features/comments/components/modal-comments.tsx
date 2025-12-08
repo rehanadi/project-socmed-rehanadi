@@ -62,7 +62,7 @@ const ModalComments = ({
                     author={{
                       id: 1,
                       name: 'John Doe',
-                      avatar: '/images/avatar.png',
+                      avatarUrl: '/images/avatar.png',
                     }}
                     createdAt='1 Minutes ago'
                     size="small"
@@ -92,7 +92,7 @@ const ModalComments = ({
                       author={{
                         id: 2,
                         name: 'Alexander',
-                        avatar: '/images/avatar-2.png',
+                        avatarUrl: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
                       text="This is the kind of love everyone dreams about ✨"
@@ -104,7 +104,7 @@ const ModalComments = ({
                       author={{
                         id: 2,
                         name: 'Alexander',
-                        avatar: '/images/avatar-2.png',
+                        avatarUrl: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
                       text="This is the kind of love everyone dreams about ✨"
@@ -116,7 +116,7 @@ const ModalComments = ({
                       author={{
                         id: 2,
                         name: 'Alexander',
-                        avatar: '/images/avatar-2.png',
+                        avatarUrl: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
                       text="This is the kind of love everyone dreams about ✨"
@@ -128,7 +128,7 @@ const ModalComments = ({
                       author={{
                         id: 2,
                         name: 'Alexander',
-                        avatar: '/images/avatar-2.png',
+                        avatarUrl: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
                       text="This is the kind of love everyone dreams about ✨"
@@ -140,7 +140,7 @@ const ModalComments = ({
                       author={{
                         id: 2,
                         name: 'Alexander',
-                        avatar: '/images/avatar-2.png',
+                        avatarUrl: '/images/avatar-2.png',
                       }}
                       createdAt='1 Minute ago'
                       text="This is the kind of love everyone dreams about ✨"
