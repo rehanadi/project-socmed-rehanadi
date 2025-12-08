@@ -3,6 +3,7 @@ import PostAuthor from "@/features/posts/components/post-author"
 interface CommentItemProps {
   author: {
     id: number;
+    username: string;
     name: string;
     avatarUrl: string;
   };

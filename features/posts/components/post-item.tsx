@@ -23,7 +23,7 @@ const PostItem = ({ post }: PostItemProps) => {
     <div className="flex flex-col items-start gap-2 md:gap-3">
       <PostAuthor author={author} createdAt={createdAt} />
 
-      <div className="w-full aspect-square rounded-md overflow-hidden relative">
+      <div className="w-full aspect-square rounded-md overflow-hidden relative cursor-pointer">
         <Image
           src={imageUrl}
           alt="Post Image"
@@ -35,7 +35,7 @@ const PostItem = ({ post }: PostItemProps) => {
       <PostActions likes={likeCount} comments={commentCount} shares={0} />
 
       <div className="flex flex-col gap-0 md:gap-1">
-        <Link href={`/authors/${author.id}`}>
+        <Link href={`/profile/${author.username}`}>
           <h3 className="text-sm font-semibold md:text-md">{author.name}</h3>
         </Link>
         <p className="text-sm md:text-md">{caption}</p>

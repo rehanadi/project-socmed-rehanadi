@@ -61,6 +61,7 @@ const ModalComments = ({
                   <PostAuthor
                     author={{
                       id: 1,
+                      username: 'rehan1',
                       name: 'John Doe',
                       avatarUrl: '/images/avatar.png',
                     }}
@@ -91,6 +92,7 @@ const ModalComments = ({
                     <CommentItem
                       author={{
                         id: 2,
+                        username: 'alexander2',
                         name: 'Alexander',
                         avatarUrl: '/images/avatar-2.png',
                       }}
@@ -103,6 +105,7 @@ const ModalComments = ({
                     <CommentItem
                       author={{
                         id: 2,
+                        username: 'alexander2',
                         name: 'Alexander',
                         avatarUrl: '/images/avatar-2.png',
                       }}
@@ -115,6 +118,7 @@ const ModalComments = ({
                     <CommentItem
                       author={{
                         id: 2,
+                        username: 'alexander2',
                         name: 'Alexander',
                         avatarUrl: '/images/avatar-2.png',
                       }}
@@ -127,6 +131,7 @@ const ModalComments = ({
                     <CommentItem
                       author={{
                         id: 2,
+                        username: 'alexander2',
                         name: 'Alexander',
                         avatarUrl: '/images/avatar-2.png',
                       }}
@@ -139,6 +144,7 @@ const ModalComments = ({
                     <CommentItem
                       author={{
                         id: 2,
+                        username: 'alexander2',
                         name: 'Alexander',
                         avatarUrl: '/images/avatar-2.png',
                       }}

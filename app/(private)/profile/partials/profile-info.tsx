@@ -16,7 +16,7 @@ const ProfileInfo = () => {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <Link href={`/authors/1`}>
+            <Link href={`/profile/rehan1`}>
               <h3 className="text-sm md:text-md font-bold">
                 John Doe
               </h3>

@@ -6,6 +6,7 @@ import { formatRelativeTime } from '@/features/shared/utils/time-utils';
 interface PostAuthorProps {
   author: {
     id: number;
+    username: string;
     name: string;
     avatarUrl: string | null;
   };
@@ -27,7 +28,7 @@ const PostAuthor = ({ author, createdAt, size = 'large' }: PostAuthorProps) => {
       </Avatar>
 
       <div className="flex flex-col">
-        <Link href={`/authors/${author.id}`}>
+        <Link href={`/profile/${author.username}`}>
           <h3
             className={cn(
               '',

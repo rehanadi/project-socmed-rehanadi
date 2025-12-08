@@ -6,6 +6,7 @@ import { Icon } from "@iconify/react";
 interface LikeItemProps {
   user: {
     id: number;
+    username: string;
     name: string;
     avatar: string;
   };
@@ -26,7 +27,7 @@ const LikeItem = ({
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <Link href={`/authors/${user.id}`}>
+          <Link href={`/profile/${user.username}`}>
             <h3 className="text-sm font-bold">
               {user.name}
             </h3>
