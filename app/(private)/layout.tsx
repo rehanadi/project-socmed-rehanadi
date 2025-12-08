@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/lib/hooks';
 import Header from '@/features/shared/components/header';
@@ -11,13 +11,22 @@ interface PrivateLayoutProps {
 
 const PrivateLayout = ({ children }: PrivateLayoutProps) => {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [mounted, isAuthenticated, router]);
+
+  if (!mounted) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return null;
