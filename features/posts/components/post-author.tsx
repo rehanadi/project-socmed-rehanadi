@@ -23,7 +23,10 @@ const PostAuthor = ({ author, createdAt, size = 'large' }: PostAuthorProps) => {
       )}
     >
       <Avatar className={cn(size === 'small' ? 'size-10' : 'size-11 md:size-16')}>
-        <AvatarImage src={author.avatarUrl || '/images/avatar.png'} />
+        <AvatarImage
+          src={author.avatarUrl || '/images/avatar.png'}
+          className="aspect-square rounded-full object-cover"
+        />
         <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
       </Avatar>
 

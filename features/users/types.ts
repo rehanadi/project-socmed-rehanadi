@@ -24,3 +24,27 @@ export interface GetMyProfileResponse {
     stats: UserStats;
   };
 }
+
+export interface UserCounts {
+  post: number;
+  followers: number;
+  following: number;
+  likes: number;
+}
+
+export interface GetUserProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    username: string;
+    bio: string | null;
+    avatarUrl: string | null;
+    email: string;
+    phone: string;
+    counts: UserCounts;
+    isFollowing: boolean;
+    isMe: boolean;
+  };
+}

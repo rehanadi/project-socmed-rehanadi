@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary-300 font-bold text-sm md:text-md rounded-full hover:opacity-90 transition-colors',
+          'bg-primary-300 font-bold text-sm md:text-md rounded-full hover:bg-primary-200 transition-colors',
         outline:
           'bg-transparent font-bold text-sm md:text-md border border-neutral-900 rounded-full hover:bg-neutral-900 transition-colors',
         secondary:

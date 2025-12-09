@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { likesService } from './services';
+import { CACHE_DURATION } from '../shared/constants/duration';
 import { getErrorMessage } from '@/lib/api';
 
 export const useToggleLike = () => {
@@ -33,5 +34,18 @@ export const useToggleLike = () => {
     onError: (error) => {
       toast.error(getErrorMessage(error));
     },
+  });
+};
+
+export const useGetUserLikes = (username: string) => {
+  return useQuery({
+    queryKey: ['userLikes', username],
+    queryFn: async () => {
+      const response = await likesService.getUserLikes(username, 1, 9);
+      return response.data.posts;
+    },
+    staleTime: CACHE_DURATION,
+    gcTime: CACHE_DURATION,
+    enabled: !!username,
   });
 };

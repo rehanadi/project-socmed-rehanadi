@@ -58,6 +58,7 @@ const Header = () => {
                   <Avatar className="size-10 md:size-12">
                     <AvatarImage
                       src={user?.avatarUrl || '/images/avatar.png'}
+                      className="aspect-square rounded-full object-cover"
                     />
                     <AvatarFallback>
                       {user?.name || 'User'}

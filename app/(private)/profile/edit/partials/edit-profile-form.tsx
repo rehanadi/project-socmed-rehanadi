@@ -9,7 +9,10 @@ const EditProfileForm = () => {
     <form className="flex flex-col md:flex-row gap-4 md:gap-12">
       <div className="shrink-0 flex flex-col items-center gap-4">
         <Avatar className="size-20 md:size-32.5">
-          <AvatarImage src="/images/avatar.png" />
+          <AvatarImage
+            src="/images/avatar.png"
+            className="aspect-square rounded-full object-cover"
+          />
           <AvatarFallback>
             User
           </AvatarFallback>

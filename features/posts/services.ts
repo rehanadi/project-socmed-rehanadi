@@ -9,6 +9,7 @@ import {
   AddPostResponse,
   GetFeedResponse,
   GetMyPostsResponse,
+  GetUserPostsResponse,
   GetPostResponse,
   DeletePostResponse,
 } from './types';
@@ -42,6 +43,18 @@ export const postsService = {
   ): Promise<GetMyPostsResponse> => {
     const response = await api.get<GetMyPostsResponse>(
       `${API_ME_URL}/posts?page=${page}&limit=${limit}`
+    );
+
+    return response.data;
+  },
+
+  getUserPosts: async (
+    username: string,
+    page: number,
+    limit: number
+  ): Promise<GetUserPostsResponse> => {
+    const response = await api.get<GetUserPostsResponse>(
+      `/api/users/${username}/posts?page=${page}&limit=${limit}`
     );
 
     return response.data;

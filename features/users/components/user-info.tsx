@@ -6,12 +6,15 @@ import { UserProfile } from '../types';
 
 interface UserInfoProps {
   profile: UserProfile;
+  isFollowing?: boolean;
   isMe?: boolean;
 }
 
-const UserInfo = ({ profile, isMe = false }: UserInfoProps) => {
-  const isFollowing = false;
-
+const UserInfo = ({
+  profile,
+  isFollowing = false,
+  isMe = false,
+}: UserInfoProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col md:flex-row items-start md:justify-between md:items-center gap-3">
@@ -19,7 +22,7 @@ const UserInfo = ({ profile, isMe = false }: UserInfoProps) => {
           <Avatar className="size-16">
             <AvatarImage
               src={profile.avatarUrl || '/images/avatar.png'}
-              className="rounded-full object-cover"
+              className="aspect-square rounded-full object-cover"
             />
             <AvatarFallback>{profile.name}</AvatarFallback>
           </Avatar>
@@ -61,9 +64,7 @@ const UserInfo = ({ profile, isMe = false }: UserInfoProps) => {
         </div>
       </div>
 
-      {profile.bio && (
-        <p className="text-sm md:text-md">{profile.bio}</p>
-      )}
+      {profile.bio && <p className="text-sm md:text-md">{profile.bio}</p>}
     </div>
   );
 };

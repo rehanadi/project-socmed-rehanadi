@@ -53,6 +53,20 @@ export interface GetMyPostsResponse {
   };
 }
 
+export interface GetUserPostsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    posts: Post[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}
+
 export interface GetPostResponse {
   success: boolean;
   message: string;

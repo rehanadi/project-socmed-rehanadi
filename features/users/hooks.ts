@@ -42,3 +42,16 @@ export const useGetMyProfile = () => {
     gcTime: CACHE_DURATION,
   });
 };
+
+export const useGetUserProfile = (username: string) => {
+  return useQuery({
+    queryKey: ['userProfile', username],
+    queryFn: async () => {
+      const response = await usersService.getUserProfile(username);
+      return response.data;
+    },
+    staleTime: CACHE_DURATION,
+    gcTime: CACHE_DURATION,
+    enabled: !!username,
+  });
+};

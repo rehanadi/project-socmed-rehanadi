@@ -21,7 +21,10 @@ const LikeItem = ({
     <div className="flex-between gap-4">
       <div className="flex-center gap-2">
         <Avatar className="size-12">
-          <AvatarImage src={author.avatarUrl ?? "/images/avatar.png"} />
+          <AvatarImage
+            src={author.avatarUrl ?? "/images/avatar.png"}
+            className="aspect-square rounded-full object-cover"
+          />
           <AvatarFallback>
             {author.name}
           </AvatarFallback>

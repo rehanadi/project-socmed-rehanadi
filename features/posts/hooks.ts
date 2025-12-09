@@ -143,3 +143,16 @@ export const useLoadMoreMyPosts = () => {
 
   return { loadMore, hasMore: myPosts.length < total };
 };
+
+export const useGetUserPosts = (username: string) => {
+  return useQuery({
+    queryKey: ['userPosts', username],
+    queryFn: async () => {
+      const response = await postsService.getUserPosts(username, 1, 9);
+      return response.data.posts;
+    },
+    staleTime: CACHE_DURATION,
+    gcTime: CACHE_DURATION,
+    enabled: !!username,
+  });
+};
