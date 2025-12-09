@@ -12,7 +12,7 @@ const FloatingMenus = () => {
       />
 
       <Button
-        className="size-11! md:size-12! aspect-square rounded-full bg-primary-300 hover:opacity-80 transition-colors"
+        className="size-11! md:size-12! aspect-square rounded-full bg-primary-300 hover:opacity-80 transition hover:scale-110"
         asChild
       >
         <Link href="/posts/add">

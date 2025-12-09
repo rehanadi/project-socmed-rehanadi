@@ -1,5 +1,9 @@
 import { api } from '@/lib/api';
-import { GetCommentsResponse } from './types';
+import {
+  GetCommentsResponse,
+  AddCommentPayload,
+  AddCommentResponse,
+} from './types';
 
 const API_POSTS_URL = '/api/posts';
 
@@ -11,6 +15,18 @@ export const commentsService = {
   ): Promise<GetCommentsResponse> => {
     const response = await api.get<GetCommentsResponse>(
       `${API_POSTS_URL}/${postId}/comments?page=${page}&limit=${limit}`
+    );
+
+    return response.data;
+  },
+
+  addComment: async (
+    postId: number,
+    payload: AddCommentPayload
+  ): Promise<AddCommentResponse> => {
+    const response = await api.post<AddCommentResponse>(
+      `${API_POSTS_URL}/${postId}/comments`,
+      payload
     );
 
     return response.data;

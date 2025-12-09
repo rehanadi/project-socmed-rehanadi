@@ -24,6 +24,27 @@ export interface GetCommentsResponse {
   };
 }
 
+export interface AddCommentPayload {
+  text: string;
+}
+
+export interface AddCommentResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    text: string;
+    createdAt: string;
+    author: {
+      id: number;
+      username: string;
+      name: string;
+      avatarUrl: string | null;
+    };
+    isMine: boolean;
+  };
+}
+
 export interface CommentsState {
   commentsByPostId: Record<
     number,

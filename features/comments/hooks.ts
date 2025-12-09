@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { commentsService } from './services';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import {
@@ -8,6 +9,8 @@ import {
   setCommentsPagination,
 } from './stores';
 import { CACHE_DURATION } from '../shared/constants/duration';
+import { AddCommentPayload } from './types';
+import { getErrorMessage } from '@/lib/api';
 
 export const useGetComments = (postId: number) => {
   const dispatch = useAppDispatch();
@@ -55,4 +58,22 @@ export const useLoadMoreComments = (postId: number) => {
   };
 
   return { loadMore, hasMore: comments.length < total };
+};
+
+export const useAddComment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, payload }: { postId: number; payload: AddCommentPayload }) =>
+      commentsService.addComment(postId, payload),
+    onSuccess: (data, variables) => {
+      toast.success('Comment created');
+      queryClient.invalidateQueries({
+        queryKey: ['comments', variables.postId],
+      });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
 };

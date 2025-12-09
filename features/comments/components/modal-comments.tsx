@@ -1,18 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import PostActions from '@/features/posts/components/post-actions';
 import PostAuthor from '@/features/posts/components/post-author';
-import { Icon } from '@iconify/react';
 import { Ellipsis } from 'lucide-react';
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import CommentItem from './comment-item';
-import CommentSkeleton from './comment-skeleton';
+import CommentList from './comment-list';
+import AddCommentForm from './add-comment-form';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetComments, useLoadMoreComments } from '../hooks';
 import { Post } from '@/features/posts/types';
@@ -24,8 +20,6 @@ interface ModalCommentsProps {
 }
 
 const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
-  const [comment, setComment] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,17 +61,6 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
     };
   }, [handleObserver, isOpen]);
 
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setComment((prev) => prev + emojiData.emoji);
-    setShowEmojiPicker(false);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(comment);
-    setComment('');
-  };
-
   if (!post) return null;
 
   return (
@@ -114,44 +97,12 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
               <div className="flex flex-col items-start gap-4">
                 <h3 className="font-bold text-md">Comments</h3>
 
-                {isLoading && comments.length === 0 ? (
-                  <>
-                    <CommentSkeleton />
-                    <Separator />
-                    <CommentSkeleton />
-                    <Separator />
-                    <CommentSkeleton />
-                  </>
-                ) : comments.length === 0 ? (
-                  <div className="w-full h-[155px] flex-center flex-col">
-                    <h4 className="font-bold text-md">No Comments yet</h4>
-                    <p className="text-sm text-neutral-400">
-                      Start the conversation
-                    </p>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-start gap-4 w-full">
-                    {comments.map((commentItem, index) => (
-                      <Fragment key={commentItem.id}>
-                        <CommentItem
-                          author={commentItem.author}
-                          createdAt={commentItem.createdAt}
-                          text={commentItem.text}
-                        />
-                        {index < comments.length - 1 && <Separator />}
-                      </Fragment>
-                    ))}
-
-                    {hasMore && <div ref={loadMoreRef} className="h-4" />}
-
-                    {isLoading && comments.length > 0 && (
-                      <>
-                        <Separator />
-                        <CommentSkeleton />
-                      </>
-                    )}
-                  </div>
-                )}
+                <CommentList
+                  comments={comments}
+                  isLoading={isLoading}
+                  hasMore={hasMore}
+                  loadMoreRef={loadMoreRef}
+                />
               </div>
             </div>
 
@@ -165,47 +116,7 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
               <Separator className="block md:hidden" />
 
-              <form
-                onSubmit={handleSubmit}
-                className="flex-between gap-2 relative"
-              >
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className="shrink-0 size-12 border border-neutral-900 rounded-xl flex-center hover:bg-neutral-900/10 transition-colors cursor-pointer"
-                  >
-                    <Icon icon="proicons:emoji" className="size-6" />
-                  </button>
-
-                  {showEmojiPicker && (
-                    <div className="absolute bottom-full left-0 mb-2 z-50">
-                      <EmojiPicker
-                        onEmojiClick={handleEmojiClick}
-                        width={350}
-                        height={400}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-1 size-12 px-4 border border-neutral-900 rounded-xl flex-between">
-                  <Input
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Add Comment"
-                    className="p-0 bg-transparent border-0 text-md font-medium flex-1 placeholder:text-neutral-600"
-                  />
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    disabled={!comment.trim()}
-                    className="shrink-0 border-0 text-primary-200 disabled:text-neutral-600"
-                  >
-                    Post
-                  </Button>
-                </div>
-              </form>
+              <AddCommentForm postId={postId} />
             </div>
           </div>
         </div>
