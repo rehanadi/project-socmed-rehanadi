@@ -4,6 +4,7 @@ import {
   AddPostPayload,
   AddPostResponse,
   GetFeedResponse,
+  GetPostResponse,
   DeletePostResponse,
 } from './types';
 
@@ -25,6 +26,14 @@ export const postsService = {
   getFeed: async (page: number, limit: number): Promise<GetFeedResponse> => {
     const response = await api.get<GetFeedResponse>(
       `${API_FEED_URL}?page=${page}&limit=${limit}`
+    );
+
+    return response.data;
+  },
+
+  getPost: async (postId: number): Promise<GetPostResponse> => {
+    const response = await api.get<GetPostResponse>(
+      `${API_POSTS_URL}/${postId}`
     );
 
     return response.data;

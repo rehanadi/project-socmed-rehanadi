@@ -39,6 +39,12 @@ export interface GetFeedResponse {
   };
 }
 
+export interface GetPostResponse {
+  success: boolean;
+  message: string;
+  data: Post;
+}
+
 export interface DeletePostResponse {
   success: boolean;
   message: string;

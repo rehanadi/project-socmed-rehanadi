@@ -148,11 +148,13 @@ const PostItem = ({ post }: PostItemProps) => {
         </div>
       </div>
 
-      <ModalComments
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        post={post}
-      />
+      {isModalOpen && (
+        <ModalComments
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          postId={post.id}
+        />
+      )}
     </>
   );
 };

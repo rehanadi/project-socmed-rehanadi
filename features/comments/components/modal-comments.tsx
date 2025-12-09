@@ -19,17 +19,16 @@ import { useAppSelector } from '@/lib/hooks';
 import { useGetComments, useLoadMoreComments } from '../hooks';
 import { useToggleLike } from '@/features/likes/hooks';
 import { useToggleSave } from '@/features/saves/hooks';
-import { useDeletePost } from '@/features/posts/hooks';
-import { Post } from '@/features/posts/types';
+import { useDeletePost, useGetPost } from '@/features/posts/hooks';
 import { useRouter } from 'next/navigation';
 
 interface ModalCommentsProps {
   isOpen: boolean;
   onClose: () => void;
-  post: Post | null;
+  postId: number;
 }
 
-const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
+const ModalComments = ({ isOpen, onClose, postId }: ModalCommentsProps) => {
   const router = useRouter();
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -37,19 +36,16 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
   const currentUser = useAppSelector((state) => state.auth.user);
   const savedPostIds = useAppSelector((state) => state.saves.savedPostIds);
 
-  const [optimisticLiked, setOptimisticLiked] = useState(
-    post?.likedByMe ?? false
-  );
-  const [optimisticLikeCount, setOptimisticLikeCount] = useState(
-    post?.likeCount ?? 0
-  );
+  const { data: post, isLoading: isLoadingPost } = useGetPost(postId);
+
+  const [optimisticLiked, setOptimisticLiked] = useState(false);
+  const [optimisticLikeCount, setOptimisticLikeCount] = useState(0);
   const [optimisticSaved, setOptimisticSaved] = useState(false);
 
   const { mutate: toggleLike, isPending: isLiking } = useToggleLike();
   const { mutate: toggleSave, isPending: isSaving } = useToggleSave();
   const { mutate: deletePost, isPending: isDeleting } = useDeletePost();
 
-  const postId = post?.id ?? 0;
   const commentsData = useAppSelector(
     (state) => state.comments.commentsByPostId[postId]
   );
@@ -60,7 +56,7 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
   const isMyPost = currentUser?.id === post?.author.id;
 
-  // Update optimistic state when post changes or savedPostIds changes
+  // Update optimistic state when post changes
   useEffect(() => {
     if (post) {
       setOptimisticLiked(post.likedByMe);
@@ -68,11 +64,12 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
     }
   }, [post]);
 
+  // Update optimistic saved state
   useEffect(() => {
-    if (post) {
-      setOptimisticSaved(savedPostIds.includes(post.id));
+    if (postId) {
+      setOptimisticSaved(savedPostIds.includes(postId));
     }
-  }, [post, savedPostIds]);
+  }, [postId, savedPostIds]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -163,7 +160,17 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
     });
   };
 
-  if (!post) return null;
+  if (isLoadingPost || !post) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="md:w-300 md:max-w-[calc(100vw-6rem)]">
+          <div className="flex-center h-[70vh]">
+            <p>Loading...</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

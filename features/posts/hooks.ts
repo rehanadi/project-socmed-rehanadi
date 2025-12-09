@@ -82,3 +82,16 @@ export const useDeletePost = () => {
     },
   });
 };
+
+export const useGetPost = (postId: number) => {
+  return useQuery({
+    queryKey: ['post', postId],
+    queryFn: async () => {
+      const response = await postsService.getPost(postId);
+      return response.data;
+    },
+    staleTime: CACHE_DURATION,
+    gcTime: CACHE_DURATION,
+    enabled: !!postId && postId > 0,
+  });
+};
