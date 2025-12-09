@@ -23,55 +23,61 @@ const ModalLikes = ({
           
           <div className="flex-1 flex flex-col gap-5 pr-2 overflow-y-auto scrollbar-thin">
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={true}
             />
 
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={true}
             />
 
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={false}
             />
 
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={false}
             />
 
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={false}
             />
 
             <LikeItem
-              user={{
+              author={{
                 id: 1,
+                username: "johndoe",
                 name: "John Doe",
-                avatar: "/images/avatar.png",
+                avatarUrl: "/images/avatar.png",
               }}
               isFollowing={false}
             />

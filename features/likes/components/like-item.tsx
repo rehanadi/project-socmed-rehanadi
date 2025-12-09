@@ -4,36 +4,36 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 
 interface LikeItemProps {
-  user: {
+  author: {
     id: number;
     username: string;
     name: string;
-    avatar: string;
+    avatarUrl: string | null;
   };
   isFollowing: boolean;
 }
 
 const LikeItem = ({
-  user,
+  author,
   isFollowing,
 }: LikeItemProps) => {
   return (
     <div className="flex-between gap-4">
       <div className="flex-center gap-2">
         <Avatar className="size-12">
-          <AvatarImage src={user.avatar} />
+          <AvatarImage src={author.avatarUrl ?? "/images/avatar.png"} />
           <AvatarFallback>
-            {user.name}
+            {author.name}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <Link href={`/profile/${user.username}`}>
+          <Link href={`/profile/${author.username}`}>
             <h3 className="text-sm font-bold">
-              {user.name}
+              {author.name}
             </h3>
           </Link>
           <p className="text-sm text-neutral-400">
-            {user.name}
+            {author.name}
           </p>
         </div>
       </div>
