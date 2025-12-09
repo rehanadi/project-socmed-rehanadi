@@ -8,6 +8,8 @@ import PostAuthor from './post-author';
 import PostActions from './post-actions';
 import ModalComments from '@/features/comments/components/modal-comments';
 import { useToggleLike } from '@/features/likes/hooks';
+import { useToggleSave } from '@/features/saves/hooks';
+import { useAppSelector } from '@/lib/hooks';
 
 interface PostItemProps {
   post: Post;
@@ -23,7 +25,13 @@ const PostItem = ({ post }: PostItemProps) => {
     post.likeCount
   );
 
-  const { mutate: toggleLike, isPending } = useToggleLike();
+  const savedPostIds = useAppSelector((state) => state.saves.savedPostIds);
+  const [optimisticSaved, setOptimisticSaved] = useState(
+    savedPostIds.includes(post.id)
+  );
+
+  const { mutate: toggleLike, isPending: isLiking } = useToggleLike();
+  const { mutate: toggleSave, isPending: isSaving } = useToggleSave();
 
   const { caption, imageUrl, author, createdAt, commentCount } = post;
 
@@ -66,6 +74,26 @@ const PostItem = ({ post }: PostItemProps) => {
     );
   };
 
+  const handleSaveClick = () => {
+    // Optimistic update
+    const previousSaved = optimisticSaved;
+
+    setOptimisticSaved(!optimisticSaved);
+
+    toggleSave(
+      {
+        postId: post.id,
+        isSaved: optimisticSaved,
+      },
+      {
+        onError: () => {
+          // Rollback on error
+          setOptimisticSaved(previousSaved);
+        },
+      }
+    );
+  };
+
   return (
     <>
       <div className="flex flex-col items-start gap-2 md:gap-3">
@@ -84,13 +112,17 @@ const PostItem = ({ post }: PostItemProps) => {
         </div>
 
         <PostActions
+          postId={post.id}
           likes={optimisticLikeCount}
           comments={commentCount}
           shares={0}
           likedByMe={optimisticLiked}
+          savedByMe={optimisticSaved}
           onCommentClick={handleCommentClick}
           onLikeClick={handleLikeClick}
-          isLiking={isPending}
+          onSaveClick={handleSaveClick}
+          isLiking={isLiking}
+          isSaving={isSaving}
         />
 
         <div className="flex flex-col gap-0 md:gap-1">

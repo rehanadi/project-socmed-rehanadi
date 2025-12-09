@@ -18,6 +18,7 @@ import AddCommentForm from './add-comment-form';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetComments, useLoadMoreComments } from '../hooks';
 import { useToggleLike } from '@/features/likes/hooks';
+import { useToggleSave } from '@/features/saves/hooks';
 import { useDeletePost } from '@/features/posts/hooks';
 import { Post } from '@/features/posts/types';
 import { useRouter } from 'next/navigation';
@@ -34,14 +35,20 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const currentUser = useAppSelector((state) => state.auth.user);
+  const savedPostIds = useAppSelector((state) => state.saves.savedPostIds);
+
   const [optimisticLiked, setOptimisticLiked] = useState(
     post?.likedByMe ?? false
   );
   const [optimisticLikeCount, setOptimisticLikeCount] = useState(
     post?.likeCount ?? 0
   );
+  const [optimisticSaved, setOptimisticSaved] = useState(
+    savedPostIds.includes(post?.id ?? 0)
+  );
 
-  const { mutate: toggleLike, isPending } = useToggleLike();
+  const { mutate: toggleLike, isPending: isLiking } = useToggleLike();
+  const { mutate: toggleSave, isPending: isSaving } = useToggleSave();
   const { mutate: deletePost, isPending: isDeleting } = useDeletePost();
 
   const postId = post?.id ?? 0;
@@ -55,13 +62,19 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
   const isMyPost = currentUser?.id === post?.author.id;
 
-  // Update optimistic state when post changes
+  // Update optimistic state when post changes or savedPostIds changes
   useEffect(() => {
     if (post) {
       setOptimisticLiked(post.likedByMe);
       setOptimisticLikeCount(post.likeCount);
     }
   }, [post]);
+
+  useEffect(() => {
+    if (post) {
+      setOptimisticSaved(savedPostIds.includes(post.id));
+    }
+  }, [post, savedPostIds]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -114,6 +127,28 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
           // Rollback on error
           setOptimisticLiked(previousLiked);
           setOptimisticLikeCount(previousCount);
+        },
+      }
+    );
+  };
+
+  const handleSaveClick = () => {
+    if (!post) return;
+
+    // Optimistic update
+    const previousSaved = optimisticSaved;
+
+    setOptimisticSaved(!optimisticSaved);
+
+    toggleSave(
+      {
+        postId: post.id,
+        isSaved: optimisticSaved,
+      },
+      {
+        onError: () => {
+          // Rollback on error
+          setOptimisticSaved(previousSaved);
         },
       }
     );
@@ -196,12 +231,16 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
             <div className="shrink-0 flex flex-col gap-4">
               <PostActions
+                postId={postId}
                 likes={optimisticLikeCount}
                 comments={post.commentCount}
                 shares={0}
                 likedByMe={optimisticLiked}
+                savedByMe={optimisticSaved}
                 onLikeClick={handleLikeClick}
-                isLiking={isPending}
+                onSaveClick={handleSaveClick}
+                isLiking={isLiking}
+                isSaving={isSaving}
                 className="hidden md:flex"
               />
 

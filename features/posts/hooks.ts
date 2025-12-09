@@ -75,6 +75,7 @@ export const useDeletePost = () => {
     onSuccess: () => {
       toast.success('Post deleted');
       queryClient.invalidateQueries({ queryKey: ['feed'] });
+      queryClient.invalidateQueries({ queryKey: ['saves'] });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error));
