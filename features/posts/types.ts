@@ -39,6 +39,14 @@ export interface GetFeedResponse {
   };
 }
 
+export interface DeletePostResponse {
+  success: boolean;
+  message: string;
+  data: {
+    deleted: boolean;
+  };
+}
+
 export interface PostsState {
   posts: Post[];
   page: number;

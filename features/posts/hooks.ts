@@ -66,3 +66,18 @@ export const useLoadMorePosts = () => {
 
   return { loadMore, hasMore: posts.length < total };
 };
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (postId: number) => postsService.deletePost(postId),
+    onSuccess: () => {
+      toast.success('Post deleted');
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+};

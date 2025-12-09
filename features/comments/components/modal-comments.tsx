@@ -3,16 +3,24 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import PostActions from '@/features/posts/components/post-actions';
 import PostAuthor from '@/features/posts/components/post-author';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Trash2 } from 'lucide-react';
 import CommentList from './comment-list';
 import AddCommentForm from './add-comment-form';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetComments, useLoadMoreComments } from '../hooks';
 import { useToggleLike } from '@/features/likes/hooks';
+import { useDeletePost } from '@/features/posts/hooks';
 import { Post } from '@/features/posts/types';
+import { useRouter } from 'next/navigation';
 
 interface ModalCommentsProps {
   isOpen: boolean;
@@ -21,13 +29,20 @@ interface ModalCommentsProps {
 }
 
 const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
+  const router = useRouter();
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const [optimisticLiked, setOptimisticLiked] = useState(post?.likedByMe ?? false);
-  const [optimisticLikeCount, setOptimisticLikeCount] = useState(post?.likeCount ?? 0);
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const [optimisticLiked, setOptimisticLiked] = useState(
+    post?.likedByMe ?? false
+  );
+  const [optimisticLikeCount, setOptimisticLikeCount] = useState(
+    post?.likeCount ?? 0
+  );
 
   const { mutate: toggleLike, isPending } = useToggleLike();
+  const { mutate: deletePost, isPending: isDeleting } = useDeletePost();
 
   const postId = post?.id ?? 0;
   const commentsData = useAppSelector(
@@ -37,6 +52,8 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
   const { isLoading } = useGetComments(postId);
   const { loadMore, hasMore } = useLoadMoreComments(postId);
+
+  const isMyPost = currentUser?.id === post?.author.id;
 
   // Update optimistic state when post changes
   useEffect(() => {
@@ -102,6 +119,17 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
     );
   };
 
+  const handleDeletePost = () => {
+    if (!post) return;
+
+    deletePost(post.id, {
+      onSuccess: () => {
+        onClose();
+        router.push('/');
+      },
+    });
+  };
+
   if (!post) return null;
 
   return (
@@ -127,7 +155,25 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
                     size="small"
                   />
 
-                  <Ellipsis className="size-6 cursor-pointer" />
+                  {isMyPost && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="cursor-pointer">
+                          <Ellipsis className="size-6" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={handleDeletePost}
+                          disabled={isDeleting}
+                        >
+                          <Trash2 className="size-4" />
+                          {isDeleting ? 'Deleting...' : 'Delete'}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
 
                 <p className="text-sm">{post.caption}</p>
