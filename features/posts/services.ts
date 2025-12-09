@@ -1,9 +1,14 @@
 import { api } from '@/lib/api';
-import { API_POSTS_URL, API_FEED_URL } from '@/features/shared/constants/api-url';
+import {
+  API_POSTS_URL,
+  API_FEED_URL,
+  API_ME_URL,
+} from '@/features/shared/constants/api-url';
 import {
   AddPostPayload,
   AddPostResponse,
   GetFeedResponse,
+  GetMyPostsResponse,
   GetPostResponse,
   DeletePostResponse,
 } from './types';
@@ -26,6 +31,17 @@ export const postsService = {
   getFeed: async (page: number, limit: number): Promise<GetFeedResponse> => {
     const response = await api.get<GetFeedResponse>(
       `${API_FEED_URL}?page=${page}&limit=${limit}`
+    );
+
+    return response.data;
+  },
+
+  getMyPosts: async (
+    page: number,
+    limit: number
+  ): Promise<GetMyPostsResponse> => {
+    const response = await api.get<GetMyPostsResponse>(
+      `${API_ME_URL}/posts?page=${page}&limit=${limit}`
     );
 
     return response.data;

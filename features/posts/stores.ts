@@ -8,6 +8,12 @@ const initialState: PostsState = {
   total: 0,
   totalPages: 0,
   hasMore: true,
+  myPosts: [],
+  myPostsPage: 1,
+  myPostsLimit: 9,
+  myPostsTotal: 0,
+  myPostsTotalPages: 0,
+  myPostsHasMore: true,
 };
 
 const postsSlice = createSlice({
@@ -45,6 +51,30 @@ const postsSlice = createSlice({
       state.totalPages = 0;
       state.hasMore = true;
     },
+    setMyPosts: (state, action: PayloadAction<Post[]>) => {
+      state.myPosts = action.payload;
+    },
+    appendMyPosts: (state, action: PayloadAction<Post[]>) => {
+      state.myPosts = [...state.myPosts, ...action.payload];
+    },
+    setMyPostsPagination: (
+      state,
+      action: PayloadAction<{
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      }>
+    ) => {
+      state.myPostsPage = action.payload.page;
+      state.myPostsLimit = action.payload.limit;
+      state.myPostsTotal = action.payload.total;
+      state.myPostsTotalPages = action.payload.totalPages;
+      state.myPostsHasMore = state.myPosts.length < action.payload.total;
+    },
+    incrementMyPostsPage: (state) => {
+      state.myPostsPage += 1;
+    },
   },
 });
 
@@ -54,5 +84,9 @@ export const {
   setPagination,
   incrementPage,
   resetPosts,
+  setMyPosts,
+  appendMyPosts,
+  setMyPostsPagination,
+  incrementMyPostsPage,
 } = postsSlice.actions;
 export default postsSlice.reducer;

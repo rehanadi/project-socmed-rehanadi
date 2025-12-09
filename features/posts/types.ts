@@ -39,6 +39,20 @@ export interface GetFeedResponse {
   };
 }
 
+export interface GetMyPostsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    items: Post[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}
+
 export interface GetPostResponse {
   success: boolean;
   message: string;
@@ -60,4 +74,10 @@ export interface PostsState {
   total: number;
   totalPages: number;
   hasMore: boolean;
+  myPosts: Post[];
+  myPostsPage: number;
+  myPostsLimit: number;
+  myPostsTotal: number;
+  myPostsTotalPages: number;
+  myPostsHasMore: boolean;
 }

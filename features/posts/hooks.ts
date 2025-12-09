@@ -5,7 +5,16 @@ import { postsService } from './services';
 import { AddPostPayload } from './types';
 import { getErrorMessage } from '@/lib/api';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { appendPosts, incrementPage, setPagination, setPosts } from './stores';
+import {
+  appendPosts,
+  incrementPage,
+  setPagination,
+  setPosts,
+  setMyPosts,
+  appendMyPosts,
+  setMyPostsPagination,
+  incrementMyPostsPage,
+} from './stores';
 import { CACHE_DURATION } from '../shared/constants/duration';
 
 export const useAddPost = () => {
@@ -94,4 +103,43 @@ export const useGetPost = (postId: number) => {
     gcTime: CACHE_DURATION,
     enabled: !!postId && postId > 0,
   });
+};
+
+export const useGetMyPosts = () => {
+  const dispatch = useAppDispatch();
+  const page = useAppSelector((state) => state.posts.myPostsPage);
+  const limit = useAppSelector((state) => state.posts.myPostsLimit);
+
+  return useQuery({
+    queryKey: ['myPosts', page, limit],
+    queryFn: async () => {
+      const response = await postsService.getMyPosts(page, limit);
+
+      if (page === 1) {
+        dispatch(setMyPosts(response.data.items));
+      } else {
+        dispatch(appendMyPosts(response.data.items));
+      }
+
+      dispatch(setMyPostsPagination(response.data.pagination));
+
+      return response;
+    },
+    staleTime: CACHE_DURATION,
+    gcTime: CACHE_DURATION,
+  });
+};
+
+export const useLoadMoreMyPosts = () => {
+  const dispatch = useAppDispatch();
+  const myPosts = useAppSelector((state) => state.posts.myPosts);
+  const total = useAppSelector((state) => state.posts.myPostsTotal);
+
+  const loadMore = () => {
+    if (myPosts.length < total) {
+      dispatch(incrementMyPostsPage());
+    }
+  };
+
+  return { loadMore, hasMore: myPosts.length < total };
 };
