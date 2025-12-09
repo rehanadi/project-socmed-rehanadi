@@ -13,8 +13,11 @@ interface PostItemProps {
   post: Post;
 }
 
+const CAPTION_LIMIT = 100;
+
 const PostItem = ({ post }: PostItemProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [optimisticLiked, setOptimisticLiked] = useState(post.likedByMe);
   const [optimisticLikeCount, setOptimisticLikeCount] = useState(
     post.likeCount
@@ -22,13 +25,13 @@ const PostItem = ({ post }: PostItemProps) => {
 
   const { mutate: toggleLike, isPending } = useToggleLike();
 
-  const {
-    caption,
-    imageUrl,
-    author,
-    createdAt,
-    commentCount,
-  } = post;
+  const { caption, imageUrl, author, createdAt, commentCount } = post;
+
+  const shouldTruncate = caption.length > CAPTION_LIMIT;
+  const displayCaption =
+    shouldTruncate && !isExpanded
+      ? caption.slice(0, CAPTION_LIMIT) + '...'
+      : caption;
 
   const handleImageClick = () => {
     setIsModalOpen(true);
@@ -44,7 +47,9 @@ const PostItem = ({ post }: PostItemProps) => {
     const previousCount = optimisticLikeCount;
 
     setOptimisticLiked(!optimisticLiked);
-    setOptimisticLikeCount(optimisticLiked ? optimisticLikeCount - 1 : optimisticLikeCount + 1);
+    setOptimisticLikeCount(
+      optimisticLiked ? optimisticLikeCount - 1 : optimisticLikeCount + 1
+    );
 
     toggleLike(
       {
@@ -92,13 +97,17 @@ const PostItem = ({ post }: PostItemProps) => {
           <Link href={`/profile/${author.username}`}>
             <h3 className="text-sm font-semibold md:text-md">{author.name}</h3>
           </Link>
-          <p className="text-sm md:text-md">{caption}</p>
-          <Link
-            href="#"
-            className="text-sm md:text-md font-bold md:font-semibold text-primary-200 hover:text-primary-300 transition-colors"
-          >
-            Show More
-          </Link>
+          <p className="text-sm md:text-md">
+            {displayCaption}
+            {shouldTruncate && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="ml-1 cursor-pointer p-0 bg-transparent text-sm md:text-md font-bold md:font-semibold text-primary-200 hover:text-primary-300 transition-colors"
+              >
+                {isExpanded ? 'Show Less' : 'Show More'}
+              </button>
+            )}
+          </p>
         </div>
       </div>
 
