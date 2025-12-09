@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
@@ -11,6 +11,7 @@ import CommentList from './comment-list';
 import AddCommentForm from './add-comment-form';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetComments, useLoadMoreComments } from '../hooks';
+import { useToggleLike } from '@/features/likes/hooks';
 import { Post } from '@/features/posts/types';
 
 interface ModalCommentsProps {
@@ -23,6 +24,11 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+  const [optimisticLiked, setOptimisticLiked] = useState(post?.likedByMe ?? false);
+  const [optimisticLikeCount, setOptimisticLikeCount] = useState(post?.likeCount ?? 0);
+
+  const { mutate: toggleLike, isPending } = useToggleLike();
+
   const postId = post?.id ?? 0;
   const commentsData = useAppSelector(
     (state) => state.comments.commentsByPostId[postId]
@@ -31,6 +37,14 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
   const { isLoading } = useGetComments(postId);
   const { loadMore, hasMore } = useLoadMoreComments(postId);
+
+  // Update optimistic state when post changes
+  useEffect(() => {
+    if (post) {
+      setOptimisticLiked(post.likedByMe);
+      setOptimisticLikeCount(post.likeCount);
+    }
+  }, [post]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -60,6 +74,33 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
       }
     };
   }, [handleObserver, isOpen]);
+
+  const handleLikeClick = () => {
+    if (!post) return;
+
+    // Optimistic update
+    const previousLiked = optimisticLiked;
+    const previousCount = optimisticLikeCount;
+
+    setOptimisticLiked(!optimisticLiked);
+    setOptimisticLikeCount(
+      optimisticLiked ? optimisticLikeCount - 1 : optimisticLikeCount + 1
+    );
+
+    toggleLike(
+      {
+        postId: post.id,
+        isLiked: optimisticLiked,
+      },
+      {
+        onError: () => {
+          // Rollback on error
+          setOptimisticLiked(previousLiked);
+          setOptimisticLikeCount(previousCount);
+        },
+      }
+    );
+  };
 
   if (!post) return null;
 
@@ -109,9 +150,12 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
             <div className="shrink-0 flex flex-col gap-4">
               <PostActions
-                likes={post.likeCount}
+                likes={optimisticLikeCount}
                 comments={post.commentCount}
                 shares={0}
+                likedByMe={optimisticLiked}
+                onLikeClick={handleLikeClick}
+                isLiking={isPending}
                 className="hidden md:flex"
               />
 

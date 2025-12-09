@@ -7,6 +7,7 @@ import { Post } from '../types';
 import PostAuthor from './post-author';
 import PostActions from './post-actions';
 import ModalComments from '@/features/comments/components/modal-comments';
+import { useToggleLike } from '@/features/likes/hooks';
 
 interface PostItemProps {
   post: Post;
@@ -14,15 +15,19 @@ interface PostItemProps {
 
 const PostItem = ({ post }: PostItemProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [optimisticLiked, setOptimisticLiked] = useState(post.likedByMe);
+  const [optimisticLikeCount, setOptimisticLikeCount] = useState(
+    post.likeCount
+  );
+
+  const { mutate: toggleLike, isPending } = useToggleLike();
 
   const {
     caption,
     imageUrl,
     author,
     createdAt,
-    likeCount,
     commentCount,
-    likedByMe,
   } = post;
 
   const handleImageClick = () => {
@@ -31,6 +36,29 @@ const PostItem = ({ post }: PostItemProps) => {
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleLikeClick = () => {
+    // Optimistic update
+    const previousLiked = optimisticLiked;
+    const previousCount = optimisticLikeCount;
+
+    setOptimisticLiked(!optimisticLiked);
+    setOptimisticLikeCount(optimisticLiked ? optimisticLikeCount - 1 : optimisticLikeCount + 1);
+
+    toggleLike(
+      {
+        postId: post.id,
+        isLiked: optimisticLiked,
+      },
+      {
+        onError: () => {
+          // Rollback on error
+          setOptimisticLiked(previousLiked);
+          setOptimisticLikeCount(previousCount);
+        },
+      }
+    );
   };
 
   return (
@@ -51,10 +79,13 @@ const PostItem = ({ post }: PostItemProps) => {
         </div>
 
         <PostActions
-          likes={likeCount}
+          likes={optimisticLikeCount}
           comments={commentCount}
           shares={0}
+          likedByMe={optimisticLiked}
           onCommentClick={handleCommentClick}
+          onLikeClick={handleLikeClick}
+          isLiking={isPending}
         />
 
         <div className="flex flex-col gap-0 md:gap-1">
