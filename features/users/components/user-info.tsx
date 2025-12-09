@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button"
 import { Icon } from "@iconify/react"
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
-import { Separator } from "@radix-ui/react-separator"
 import Link from "next/link"
+import UserStatistics from "./user-statistics"
 
-const ProfileInfo = () => {
+interface UserInfoProps {
+  isMe?: boolean;
+}
+
+const UserInfo = ({
+  isMe = false,
+}: UserInfoProps) => {
   const isFollowing = false;
 
   return (
@@ -30,18 +36,32 @@ const ProfileInfo = () => {
         </div>
 
         <div className="w-full md:w-auto flex-between gap-3">
-          {isFollowing ? (
+          {isMe ? (
             <Button
               variant="outline"
-              className="flex-1 flex-center gap-2 px-4"
+              className="flex-1 px-5.5"
+              asChild
             >
-              <Icon icon="material-symbols:check-circle-outline-rounded" className="size-5" />
-              <span>Following</span>
+              <Link href="/profile/edit">
+                Edit Profile
+              </Link>
             </Button>
           ) : (
-            <Button className="flex-1 px-6 h-10 md:h-12">
-              Follow
-            </Button>
+            <>
+              {isFollowing ? (
+                <Button
+                  variant="outline"
+                  className="flex-1 flex-center gap-2 px-4"
+                >
+                  <Icon icon="material-symbols:check-circle-outline-rounded" className="size-5" />
+                  <span>Following</span>
+                </Button>
+              ) : (
+                <Button className="flex-1 px-6 h-10 md:h-12">
+                  Follow
+                </Button>
+              )}
+            </>
           )}
           <Button
             variant="outline"
@@ -59,32 +79,9 @@ const ProfileInfo = () => {
         Creating unforgettable moments with my favorite person! 📸✨ Let's cherish every second together!
       </p>
 
-      <div className="w-full h-full flex-between flex-wrap gap-6">
-        <StatisticItem count={50} label="Post" />
-        <Separator orientation="vertical" />
-        <StatisticItem count={100} label="Followers" />
-        <Separator orientation="vertical" />
-        <StatisticItem count={43} label="Following" />
-        <Separator orientation="vertical" />
-        <StatisticItem count={567} label="Likes" />
-      </div>
+      <UserStatistics />
     </div>
-  )
-}
-
-export default ProfileInfo
-
-const StatisticItem = ({
-  count,
-  label,
-}: {
-  count: number;
-  label: string;
-}) => {
-  return (
-    <div className="flex-1 flex flex-col items-center gap-0.5">
-      <span className="font-bold text-lg md:text-xl">{count}</span>
-      <span className="text-xs md:text-md text-neutral-400">{label}</span>
-    </div>
-  )
+  );
 };
+
+export default UserInfo;

@@ -1,13 +1,13 @@
-import ProfileContainer from "./partials/profile-container"
-import ProfileTabs from "./partials/profile-tabs"
-import ProfileInfo from "./partials/profile-info"
+import UserTabs from "./partials/user-tabs"
+import UserContainer from "@/features/users/components/user-container";
+import UserInfo from "@/features/users/components/user-info";
 
 const ProfilePage = () => {
   return (
-    <ProfileContainer>
-      <ProfileInfo />
-      <ProfileTabs />
-    </ProfileContainer>
+    <UserContainer>
+      <UserInfo isMe />
+      <UserTabs />
+    </UserContainer>
   );
 };
 

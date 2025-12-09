@@ -4,11 +4,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import GalleryGrid from "./gallery-grid"
-import SavedGrid from "./saved-grid"
 import { Icon } from "@iconify/react"
+import PostGrid from "@/features/posts/components/post-grid";
+import LikeGrid from "@/features/likes/components/like-grid";
 
-const ProfileTabs = () => {
+const UserTabs = () => {
   return (
     <Tabs defaultValue="gallery">
       <TabsList>
@@ -18,22 +18,22 @@ const ProfileTabs = () => {
           label="Gallery"
         />
         <TabsTriggerItem
-          value="saved"
-          icon="mingcute:bookmark-line"
-          label="Saved"
+          value="liked"
+          icon="solar:heart-linear"
+          label="Liked"
         />
       </TabsList>
       <TabsContent value="gallery">
-        <GalleryGrid />
+        <PostGrid />
       </TabsContent>
-      <TabsContent value="saved">
-        <SavedGrid />
+      <TabsContent value="liked">
+        <LikeGrid />
       </TabsContent>
     </Tabs>
   );
 };
 
-export default ProfileTabs;
+export default UserTabs;
 
 const TabsTriggerItem = ({
   value,
