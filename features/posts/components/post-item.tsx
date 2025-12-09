@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Post } from '../types';
 import PostAuthor from './post-author';
 import PostActions from './post-actions';
@@ -40,6 +40,11 @@ const PostItem = ({ post }: PostItemProps) => {
     shouldTruncate && !isExpanded
       ? caption.slice(0, CAPTION_LIMIT) + '...'
       : caption;
+
+  // Sync optimisticSaved with savedPostIds changes
+  useEffect(() => {
+    setOptimisticSaved(savedPostIds.includes(post.id));
+  }, [savedPostIds, post.id]);
 
   const handleImageClick = () => {
     setIsModalOpen(true);

@@ -12,7 +12,7 @@ export const useGetSaves = () => {
   return useQuery({
     queryKey: ['saves'],
     queryFn: async () => {
-      const response = await savesService.getSaves(1, 1000);
+      const response = await savesService.getSaves(1, 50);
       dispatch(setSavedPosts(response.data.posts));
       return response;
     },

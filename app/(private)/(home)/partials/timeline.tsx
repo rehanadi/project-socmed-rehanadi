@@ -6,6 +6,7 @@ import PostItem from '@/features/posts/components/post-item';
 import PostSkeleton from '@/features/posts/components/post-skeleton';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetFeed, useLoadMorePosts } from '@/features/posts/hooks';
+import { useGetSaves } from '@/features/saves/hooks';
 
 const Timeline = () => {
   const posts = useAppSelector((state) => state.posts.posts);
@@ -13,6 +14,9 @@ const Timeline = () => {
   const { isLoading } = useGetFeed();
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Fetch saved posts
+  useGetSaves();
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {

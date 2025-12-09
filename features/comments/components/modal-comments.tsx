@@ -43,9 +43,7 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
   const [optimisticLikeCount, setOptimisticLikeCount] = useState(
     post?.likeCount ?? 0
   );
-  const [optimisticSaved, setOptimisticSaved] = useState(
-    savedPostIds.includes(post?.id ?? 0)
-  );
+  const [optimisticSaved, setOptimisticSaved] = useState(false);
 
   const { mutate: toggleLike, isPending: isLiking } = useToggleLike();
   const { mutate: toggleSave, isPending: isSaving } = useToggleSave();
