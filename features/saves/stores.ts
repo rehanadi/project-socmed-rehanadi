@@ -20,7 +20,7 @@ const saveSavedPostsToStorage = (posts: SavedPost[]) => {
   try {
     localStorage.setItem(SAVES_STORAGE_KEY, JSON.stringify(posts));
   } catch {
-    console.error('Failed to save posts to localStorage');
+    console.log('Failed to save posts to storage');
   }
 };
 
@@ -29,6 +29,11 @@ const savedPostsFromStorage = loadSavedPostsFromStorage();
 const initialState: SavesState = {
   savedPosts: savedPostsFromStorage,
   savedPostIds: savedPostsFromStorage.map((post) => post.id),
+  page: 1,
+  limit: 9,
+  total: 0,
+  totalPages: 0,
+  hasMore: true,
 };
 
 const savesSlice = createSlice({
@@ -39,6 +44,29 @@ const savesSlice = createSlice({
       state.savedPosts = action.payload;
       state.savedPostIds = action.payload.map((post) => post.id);
       saveSavedPostsToStorage(action.payload);
+    },
+    appendSavedPosts: (state, action: PayloadAction<SavedPost[]>) => {
+      state.savedPosts = [...state.savedPosts, ...action.payload];
+      state.savedPostIds = state.savedPosts.map((post) => post.id);
+      saveSavedPostsToStorage(state.savedPosts);
+    },
+    setSavesPagination: (
+      state,
+      action: PayloadAction<{
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      }>
+    ) => {
+      state.page = action.payload.page;
+      state.limit = action.payload.limit;
+      state.total = action.payload.total;
+      state.totalPages = action.payload.totalPages;
+      state.hasMore = state.savedPosts.length < action.payload.total;
+    },
+    incrementSavesPage: (state) => {
+      state.page += 1;
     },
     addSavedPost: (state, action: PayloadAction<SavedPost>) => {
       if (!state.savedPostIds.includes(action.payload.id)) {
@@ -59,6 +87,12 @@ const savesSlice = createSlice({
   },
 });
 
-export const { setSavedPosts, addSavedPost, removeSavedPost } =
-  savesSlice.actions;
+export const {
+  setSavedPosts,
+  appendSavedPosts,
+  setSavesPagination,
+  incrementSavesPage,
+  addSavedPost,
+  removeSavedPost,
+} = savesSlice.actions;
 export default savesSlice.reducer;

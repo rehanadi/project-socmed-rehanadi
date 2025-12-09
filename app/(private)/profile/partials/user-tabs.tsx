@@ -7,41 +7,81 @@ import PostGrid from '@/features/posts/components/post-grid';
 import SaveGrid from '@/features/saves/components/save-grid';
 import { useAppSelector } from '@/lib/hooks';
 import { useGetMyPosts, useLoadMoreMyPosts } from '@/features/posts/hooks';
+import { useGetSaves, useLoadMoreSaves } from '@/features/saves/hooks';
 
 const UserTabs = () => {
   const myPosts = useAppSelector((state) => state.posts.myPosts);
-  const { isLoading } = useGetMyPosts();
-  const { loadMore, hasMore } = useLoadMoreMyPosts();
+  const savedPosts = useAppSelector((state) => state.saves.savedPosts);
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const { isLoading: isLoadingPosts } = useGetMyPosts();
+  const { loadMore: loadMorePosts, hasMore: hasMorePosts } =
+    useLoadMoreMyPosts();
 
-  const handleObserver = useCallback(
+  const { isLoading: isLoadingSaves } = useGetSaves(9);
+  const { loadMore: loadMoreSaves, hasMore: hasMoreSaves } =
+    useLoadMoreSaves();
+
+  const postsObserverRef = useRef<IntersectionObserver | null>(null);
+  const postsLoadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const savesObserverRef = useRef<IntersectionObserver | null>(null);
+  const savesLoadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Posts infinite scroll
+  const handlePostsObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasMore && !isLoading) {
-        loadMore();
+      if (entry.isIntersecting && hasMorePosts && !isLoadingPosts) {
+        loadMorePosts();
       }
     },
-    [hasMore, isLoading, loadMore]
+    [hasMorePosts, isLoadingPosts, loadMorePosts]
   );
 
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(handleObserver, {
+    postsObserverRef.current = new IntersectionObserver(handlePostsObserver, {
       threshold: 0.1,
     });
 
-    const currentRef = loadMoreRef.current;
+    const currentRef = postsLoadMoreRef.current;
     if (currentRef) {
-      observerRef.current.observe(currentRef);
+      postsObserverRef.current.observe(currentRef);
     }
 
     return () => {
-      if (currentRef && observerRef.current) {
-        observerRef.current.unobserve(currentRef);
+      if (currentRef && postsObserverRef.current) {
+        postsObserverRef.current.unobserve(currentRef);
       }
     };
-  }, [handleObserver]);
+  }, [handlePostsObserver]);
+
+  // Saves infinite scroll
+  const handleSavesObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMoreSaves && !isLoadingSaves) {
+        loadMoreSaves();
+      }
+    },
+    [hasMoreSaves, isLoadingSaves, loadMoreSaves]
+  );
+
+  useEffect(() => {
+    savesObserverRef.current = new IntersectionObserver(handleSavesObserver, {
+      threshold: 0.1,
+    });
+
+    const currentRef = savesLoadMoreRef.current;
+    if (currentRef) {
+      savesObserverRef.current.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef && savesObserverRef.current) {
+        savesObserverRef.current.unobserve(currentRef);
+      }
+    };
+  }, [handleSavesObserver]);
 
   return (
     <Tabs defaultValue="gallery">
@@ -58,15 +98,15 @@ const UserTabs = () => {
         />
       </TabsList>
       <TabsContent value="gallery">
-        {isLoading && myPosts.length === 0 ? (
+        {isLoadingPosts && myPosts.length === 0 ? (
           <div className="w-full flex-center h-40">
             <p>Loading...</p>
           </div>
         ) : (
           <>
             <PostGrid posts={myPosts} />
-            {hasMore && <div ref={loadMoreRef} className="h-10" />}
-            {isLoading && myPosts.length > 0 && (
+            {hasMorePosts && <div ref={postsLoadMoreRef} className="h-10" />}
+            {isLoadingPosts && myPosts.length > 0 && (
               <div className="w-full flex-center h-20">
                 <p>Loading more...</p>
               </div>
@@ -75,7 +115,21 @@ const UserTabs = () => {
         )}
       </TabsContent>
       <TabsContent value="saved">
-        <SaveGrid />
+        {isLoadingSaves && savedPosts.length === 0 ? (
+          <div className="w-full flex-center h-40">
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <>
+            <SaveGrid posts={savedPosts} />
+            {hasMoreSaves && <div ref={savesLoadMoreRef} className="h-10" />}
+            {isLoadingSaves && savedPosts.length > 0 && (
+              <div className="w-full flex-center h-20">
+                <p>Loading more...</p>
+              </div>
+            )}
+          </>
+        )}
       </TabsContent>
     </Tabs>
   );
