@@ -1,52 +1,92 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-} from '@/components/ui/dialog';
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import PostActions from "@/features/posts/components/post-actions";
-import PostAuthor from "@/features/posts/components/post-author";
-import { Icon } from "@iconify/react";
-import { Ellipsis } from "lucide-react";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import CommentItem from "./comment-item";
+import { useState, useEffect, useRef, useCallback, Fragment } from 'react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import PostActions from '@/features/posts/components/post-actions';
+import PostAuthor from '@/features/posts/components/post-author';
+import { Icon } from '@iconify/react';
+import { Ellipsis } from 'lucide-react';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import CommentItem from './comment-item';
+import CommentSkeleton from './comment-skeleton';
+import { useAppSelector } from '@/lib/hooks';
+import { useGetComments, useLoadMoreComments } from '../hooks';
+import { Post } from '@/features/posts/types';
 
 interface ModalCommentsProps {
   isOpen: boolean;
   onClose: () => void;
+  post: Post | null;
 }
 
-const ModalComments = ({
-  isOpen,
-  onClose,
-}: ModalCommentsProps) => {
-  const [comment, setComment] = useState("");
+const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
+  const [comment, setComment] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const isEmpty = false;
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const postId = post?.id ?? 0;
+  const commentsData = useAppSelector(
+    (state) => state.comments.commentsByPostId[postId]
+  );
+  const comments = commentsData?.comments ?? [];
+
+  const { isLoading } = useGetComments(postId);
+  const { loadMore, hasMore } = useLoadMoreComments(postId);
+
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMore && !isLoading) {
+        loadMore();
+      }
+    },
+    [hasMore, isLoading, loadMore]
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observerRef.current.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef && observerRef.current) {
+        observerRef.current.unobserve(currentRef);
+      }
+    };
+  }, [handleObserver, isOpen]);
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setComment(prev => prev + emojiData.emoji);
+    setComment((prev) => prev + emojiData.emoji);
     setShowEmojiPicker(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(comment);
-    setComment("");
+    setComment('');
   };
+
+  if (!post) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='md:w-300 md:max-w-[calc(100vw-6rem)]'>
+      <DialogContent className="md:w-300 md:max-w-[calc(100vw-6rem)]">
         <div className="flex-center max-h-[70vh]">
           <div className="hidden md:block basis-72/120 h-full relative">
             <Image
-              src='/images/posts/post-1.png'
+              src={post.imageUrl}
               alt="Post image"
               fill
               className="object-cover"
@@ -54,27 +94,19 @@ const ModalComments = ({
           </div>
 
           <div className="flex-1 h-full p-5 flex flex-col gap-4">
-            {/* Scrollable */}
             <div className="flex-1 flex flex-col gap-4 pr-2 overflow-y-auto scrollbar-thin">
               <div className="hidden md:flex flex-col gap-2">
                 <div className="flex-between gap-4">
                   <PostAuthor
-                    author={{
-                      id: 1,
-                      username: 'rehan1',
-                      name: 'John Doe',
-                      avatarUrl: '/images/avatar.png',
-                    }}
-                    createdAt='1 Minutes ago'
+                    author={post.author}
+                    createdAt={post.createdAt}
                     size="small"
                   />
 
                   <Ellipsis className="size-6 cursor-pointer" />
                 </div>
 
-                <p className="text-sm">
-                  Creating unforgettable moments with my favorite person! 📸✨ Every laugh, every little adventure, every quiet moment together feels like magic. You make ordinary days feel extraordinary, and I'm so grateful to share this journey with you. Let's keep cherishing every second, because with you, time always feels too short. 💕
-                </p>
+                <p className="text-sm">{post.caption}</p>
               </div>
 
               <Separator className="hidden md:block" />
@@ -82,92 +114,61 @@ const ModalComments = ({
               <div className="flex flex-col items-start gap-4">
                 <h3 className="font-bold text-md">Comments</h3>
 
-                {isEmpty ? (
+                {isLoading && comments.length === 0 ? (
+                  <>
+                    <CommentSkeleton />
+                    <Separator />
+                    <CommentSkeleton />
+                    <Separator />
+                    <CommentSkeleton />
+                  </>
+                ) : comments.length === 0 ? (
                   <div className="w-full h-[155px] flex-center flex-col">
                     <h4 className="font-bold text-md">No Comments yet</h4>
-                    <p className="text-sm text-neutral-400">Start the conversation</p>
+                    <p className="text-sm text-neutral-400">
+                      Start the conversation
+                    </p>
                   </div>
                 ) : (
                   <div className="flex flex-col items-start gap-4 w-full">
-                    <CommentItem
-                      author={{
-                        id: 2,
-                        username: 'alexander2',
-                        name: 'Alexander',
-                        avatarUrl: '/images/avatar-2.png',
-                      }}
-                      createdAt='1 Minute ago'
-                      text="This is the kind of love everyone dreams about ✨"
-                    />
-                    
-                    <Separator />
+                    {comments.map((commentItem, index) => (
+                      <Fragment key={commentItem.id}>
+                        <CommentItem
+                          author={commentItem.author}
+                          createdAt={commentItem.createdAt}
+                          text={commentItem.text}
+                        />
+                        {index < comments.length - 1 && <Separator />}
+                      </Fragment>
+                    ))}
 
-                    <CommentItem
-                      author={{
-                        id: 2,
-                        username: 'alexander2',
-                        name: 'Alexander',
-                        avatarUrl: '/images/avatar-2.png',
-                      }}
-                      createdAt='1 Minute ago'
-                      text="This is the kind of love everyone dreams about ✨"
-                    />
-                    
-                    <Separator />
+                    {hasMore && <div ref={loadMoreRef} className="h-4" />}
 
-                    <CommentItem
-                      author={{
-                        id: 2,
-                        username: 'alexander2',
-                        name: 'Alexander',
-                        avatarUrl: '/images/avatar-2.png',
-                      }}
-                      createdAt='1 Minute ago'
-                      text="This is the kind of love everyone dreams about ✨"
-                    />
-                    
-                    <Separator />
-
-                    <CommentItem
-                      author={{
-                        id: 2,
-                        username: 'alexander2',
-                        name: 'Alexander',
-                        avatarUrl: '/images/avatar-2.png',
-                      }}
-                      createdAt='1 Minute ago'
-                      text="This is the kind of love everyone dreams about ✨"
-                    />
-                    
-                    <Separator />
-
-                    <CommentItem
-                      author={{
-                        id: 2,
-                        username: 'alexander2',
-                        name: 'Alexander',
-                        avatarUrl: '/images/avatar-2.png',
-                      }}
-                      createdAt='1 Minute ago'
-                      text="This is the kind of love everyone dreams about ✨"
-                    />
+                    {isLoading && comments.length > 0 && (
+                      <>
+                        <Separator />
+                        <CommentSkeleton />
+                      </>
+                    )}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Fixed */}
             <div className="shrink-0 flex flex-col gap-4">
               <PostActions
-                likes={20}
-                comments={20}
-                shares={20}
+                likes={post.likeCount}
+                comments={post.commentCount}
+                shares={0}
                 className="hidden md:flex"
               />
 
               <Separator className="block md:hidden" />
 
-              <form onSubmit={handleSubmit} className="flex-between gap-2 relative">
+              <form
+                onSubmit={handleSubmit}
+                className="flex-between gap-2 relative"
+              >
                 <div className="relative">
                   <button
                     type="button"
@@ -193,7 +194,7 @@ const ModalComments = ({
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Add Comment"
-                    className="p-0 border-0 text-md font-medium flex-1 placeholder:text-neutral-600"
+                    className="p-0 bg-transparent border-0 text-md font-medium flex-1 placeholder:text-neutral-600"
                   />
                   <Button
                     type="submit"
@@ -210,7 +211,7 @@ const ModalComments = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ModalComments
+export default ModalComments;

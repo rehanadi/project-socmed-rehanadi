@@ -5,7 +5,7 @@ interface CommentItemProps {
     id: number;
     username: string;
     name: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
   };
   createdAt: string;
   text: string;
