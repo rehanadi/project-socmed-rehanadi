@@ -64,10 +64,38 @@ export const useAddComment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ postId, payload }: { postId: number; payload: AddCommentPayload }) =>
-      commentsService.addComment(postId, payload),
+    mutationFn: ({
+      postId,
+      payload,
+    }: {
+      postId: number;
+      payload: AddCommentPayload;
+    }) => commentsService.addComment(postId, payload),
     onSuccess: (data, variables) => {
       toast.success('Comment created');
+      queryClient.invalidateQueries({
+        queryKey: ['comments', variables.postId],
+      });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+};
+
+export const useDeleteComment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      commentId,
+      postId,
+    }: {
+      commentId: number;
+      postId: number;
+    }) => commentsService.deleteComment(commentId),
+    onSuccess: (data, variables) => {
+      toast.success('Comment deleted');
       queryClient.invalidateQueries({
         queryKey: ['comments', variables.postId],
       });

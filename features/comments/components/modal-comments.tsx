@@ -99,6 +99,7 @@ const ModalComments = ({ isOpen, onClose, post }: ModalCommentsProps) => {
 
                 <CommentList
                   comments={comments}
+                  postId={postId}
                   isLoading={isLoading}
                   hasMore={hasMore}
                   loadMoreRef={loadMoreRef}

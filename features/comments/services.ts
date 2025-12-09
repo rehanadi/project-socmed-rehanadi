@@ -3,9 +3,12 @@ import {
   GetCommentsResponse,
   AddCommentPayload,
   AddCommentResponse,
+  DeleteCommentResponse,
 } from './types';
-
-const API_POSTS_URL = '/api/posts';
+import {
+  API_POSTS_URL,
+  API_COMMENTS_URL,
+} from '@/features/shared/constants/api-url';
 
 export const commentsService = {
   getComments: async (
@@ -27,6 +30,14 @@ export const commentsService = {
     const response = await api.post<AddCommentResponse>(
       `${API_POSTS_URL}/${postId}/comments`,
       payload
+    );
+
+    return response.data;
+  },
+
+  deleteComment: async (commentId: number): Promise<DeleteCommentResponse> => {
+    const response = await api.delete<DeleteCommentResponse>(
+      `${API_COMMENTS_URL}/${commentId}`
     );
 
     return response.data;

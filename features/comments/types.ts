@@ -45,6 +45,14 @@ export interface AddCommentResponse {
   };
 }
 
+export interface DeleteCommentResponse {
+  success: boolean;
+  message: string;
+  data: {
+    deleted: boolean;
+  };
+}
+
 export interface CommentsState {
   commentsByPostId: Record<
     number,

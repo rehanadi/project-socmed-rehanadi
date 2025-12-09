@@ -6,6 +6,7 @@ import { Comment } from '../types';
 
 interface CommentListProps {
   comments: Comment[];
+  postId: number;
   isLoading: boolean;
   hasMore: boolean;
   loadMoreRef: RefObject<HTMLDivElement | null>;
@@ -13,6 +14,7 @@ interface CommentListProps {
 
 const CommentList = ({
   comments,
+  postId,
   isLoading,
   hasMore,
   loadMoreRef,
@@ -43,6 +45,8 @@ const CommentList = ({
       {comments.map((commentItem, index) => (
         <Fragment key={commentItem.id}>
           <CommentItem
+            commentId={commentItem.id}
+            postId={postId}
             author={commentItem.author}
             createdAt={commentItem.createdAt}
             text={commentItem.text}
