@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import ModalComments from '@/features/comments/components/modal-comments';
 import { Post } from '../types';
+import PostEmpty from './post-empty';
 
 interface PostGridProps {
   posts: Post[];
@@ -21,11 +22,7 @@ const PostGrid = ({ posts }: PostGridProps) => {
   };
 
   if (posts.length === 0) {
-    return (
-      <div className="w-full flex-center h-40">
-        <p className="text-neutral-400">No posts yet</p>
-      </div>
-    );
+    return <PostEmpty className="mt-[130px]" />;
   }
 
   return (
