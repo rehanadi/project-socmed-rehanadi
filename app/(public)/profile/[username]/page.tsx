@@ -56,6 +56,7 @@ const UserProfilePage = () => {
           following: data.counts.following,
           likes: data.counts.likes,
         }}
+        username={username}
       />
       <UserTabs username={username} />
     </UserContainer>

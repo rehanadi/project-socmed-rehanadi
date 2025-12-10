@@ -5,9 +5,11 @@ import UserContainer from '@/features/users/components/user-container';
 import UserInfo from '@/features/users/components/user-info';
 import UserStatistics from '@/features/users/components/user-statistics';
 import { useGetMyProfile } from '@/features/users/hooks';
+import { useAppSelector } from '@/lib/hooks';
 
 const ProfilePage = () => {
   const { data, isLoading } = useGetMyProfile();
+  const currentUser = useAppSelector((state) => state.auth.user);
 
   if (isLoading) {
     return (
@@ -32,7 +34,10 @@ const ProfilePage = () => {
   return (
     <UserContainer>
       <UserInfo profile={data.profile} isMe />
-      <UserStatistics stats={data.stats} />
+      <UserStatistics
+        stats={data.stats}
+        username={currentUser?.username || data.profile.username}
+      />
       <UserTabs />
     </UserContainer>
   );

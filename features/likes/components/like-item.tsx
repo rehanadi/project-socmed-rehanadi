@@ -36,7 +36,7 @@ const LikeItem = ({
             </h3>
           </Link>
           <p className="text-sm text-neutral-400">
-            {author.name}
+            @{author.username}
           </p>
         </div>
       </div>

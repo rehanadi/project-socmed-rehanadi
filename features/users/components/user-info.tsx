@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import Link from 'next/link';
 import { UserProfile } from '../types';
 import { useToggleFollow } from '@/features/follows/hooks';
+import { useAppSelector } from '@/lib/hooks';
 
 interface UserInfoProps {
   profile: UserProfile;
@@ -19,8 +20,12 @@ const UserInfo = ({
   isFollowing = false,
   isMe = false,
 }: UserInfoProps) => {
+  const currentUser = useAppSelector((state) => state.auth.user);
   const [optimisticFollowing, setOptimisticFollowing] = useState(isFollowing);
   const { mutate: toggleFollow, isPending } = useToggleFollow();
+
+  // Check if this is current user's profile
+  const isCurrentUserProfile = isMe || currentUser?.id === profile.id;
 
   // Sync optimistic state with prop changes
   useEffect(() => {
@@ -54,7 +59,7 @@ const UserInfo = ({
           <Avatar className="size-16">
             <AvatarImage
               src={profile.avatarUrl || '/images/avatar.png'}
-              className="rounded-full object-cover"
+              className="aspect-square rounded-full object-cover"
             />
             <AvatarFallback>{profile.name}</AvatarFallback>
           </Avatar>
@@ -67,7 +72,7 @@ const UserInfo = ({
         </div>
 
         <div className="w-full md:w-auto flex-between gap-3">
-          {isMe ? (
+          {isCurrentUserProfile ? (
             <Button variant="outline" className="flex-1 px-5.5" asChild>
               <Link href="/profile/edit">Edit Profile</Link>
             </Button>
