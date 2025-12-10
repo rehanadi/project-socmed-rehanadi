@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { followsService } from './services';
+import { followsService } from '../services';
 import { getErrorMessage } from '@/lib/api';
 
 export const useToggleFollow = () => {

@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { postsService } from './services';
-import { AddPostPayload } from './types';
+import { postsService } from '../services';
+import { AddPostPayload } from '../types';
 import { getErrorMessage } from '@/lib/api';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import {
@@ -14,8 +14,8 @@ import {
   appendMyPosts,
   setMyPostsPagination,
   incrementMyPostsPage,
-} from './stores';
-import { CACHE_DURATION } from '../shared/constants/duration';
+} from '../stores';
+import { CACHE_DURATION } from '../../shared/constants/duration';
 
 export const useAddPost = () => {
   const router = useRouter();

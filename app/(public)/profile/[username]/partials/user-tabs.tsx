@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import PostGrid from '@/features/posts/components/post-grid';
 import LikeGrid from '@/features/likes/components/like-grid';
 import { usePostsPagination } from '@/features/posts/hooks/posts-pagination-hook';
-import { useLikesPagination } from '@/features/likes/hooks/likes-pagination-hook';
+import { useLikesPagination } from '@/features/likes/hooks';
 
 interface UserTabsProps {
   username: string;

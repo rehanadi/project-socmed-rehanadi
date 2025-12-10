@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Icon } from '@iconify/react';
 import PostGrid from '@/features/posts/components/post-grid';
 import SaveGrid from '@/features/saves/components/save-grid';
-import { useMyPostsPagination } from '@/features/posts/hooks/my-posts-pagination-hook';
-import { useSavesPagination } from '@/features/saves/hooks/saves-pagination-hook';
+import { useMyPostsPagination } from '@/features/posts/hooks';
+import { useSavesPagination } from '@/features/saves/hooks';
 
 const UserTabs = () => {
   const {

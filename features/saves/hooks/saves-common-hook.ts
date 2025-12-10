@@ -1,14 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { savesService } from './services';
+import { savesService } from '../services';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import {
   setSavedPosts,
   appendSavedPosts,
   setSavesPagination,
   incrementSavesPage,
-} from './stores';
-import { CACHE_DURATION } from '../shared/constants/duration';
+} from '../stores';
+import { CACHE_DURATION } from '../../shared/constants/duration';
 import { getErrorMessage } from '@/lib/api';
 
 export const useGetSaves = (limit: number = 50) => {

@@ -5,8 +5,10 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { UserStats } from '../types';
 import ModalFollows from '@/features/follows/components/modal-follows';
-import { useFollowersPagination } from '@/features/follows/hooks/followers-pagination-hook';
-import { useFollowingPagination } from '@/features/follows/hooks/following-pagination-hook';
+import {
+  useFollowersPagination,
+  useFollowingPagination,
+} from '@/features/follows/hooks';
 
 interface UserStatisticsProps {
   stats: UserStats;
