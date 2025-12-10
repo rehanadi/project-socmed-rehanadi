@@ -10,7 +10,7 @@ export const useSavesPagination = () => {
   const [total, setTotal] = useState(0);
   const limit = 9;
 
-  const { isLoading, isFetching } = useQuery({
+  const { isLoading, isFetching, refetch } = useQuery({
     queryKey: ['saves', page, limit],
     queryFn: async () => {
       const response = await savesService.getSaves(page, limit);
@@ -27,6 +27,7 @@ export const useSavesPagination = () => {
     },
     staleTime: CACHE_DURATION,
     gcTime: CACHE_DURATION,
+    refetchOnMount: 'always',
   });
 
   const loadMore = () => {
@@ -41,5 +42,6 @@ export const useSavesPagination = () => {
     isFetching,
     loadMore,
     hasMore: allPosts.length < total,
+    refetch,
   };
 };

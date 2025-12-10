@@ -10,7 +10,7 @@ export const useMyPostsPagination = () => {
   const [total, setTotal] = useState(0);
   const limit = 9;
 
-  const { isLoading, isFetching } = useQuery({
+  const { isLoading, isFetching, refetch } = useQuery({
     queryKey: ['myPosts', page, limit],
     queryFn: async () => {
       const response = await postsService.getMyPosts(page, limit);
@@ -27,6 +27,7 @@ export const useMyPostsPagination = () => {
     },
     staleTime: CACHE_DURATION,
     gcTime: CACHE_DURATION,
+    refetchOnMount: 'always',
   });
 
   const loadMore = () => {
@@ -41,5 +42,6 @@ export const useMyPostsPagination = () => {
     isFetching,
     loadMore,
     hasMore: allPosts.length < total,
+    refetch,
   };
 };
