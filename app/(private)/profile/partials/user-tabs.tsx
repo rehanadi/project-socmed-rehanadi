@@ -5,21 +5,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Icon } from '@iconify/react';
 import PostGrid from '@/features/posts/components/post-grid';
 import SaveGrid from '@/features/saves/components/save-grid';
-import { useAppSelector } from '@/lib/hooks';
-import { useGetMyPosts, useLoadMoreMyPosts } from '@/features/posts/hooks';
-import { useGetSaves, useLoadMoreSaves } from '@/features/saves/hooks';
+import { useMyPostsPagination } from '@/features/posts/hooks/my-posts-pagination-hook';
+import { useSavesPagination } from '@/features/saves/hooks/saves-pagination-hook';
 
 const UserTabs = () => {
-  const myPosts = useAppSelector((state) => state.posts.myPosts);
-  const savedPosts = useAppSelector((state) => state.saves.savedPosts);
+  const {
+    posts: myPosts,
+    isLoading: isLoadingPosts,
+    isFetching: isFetchingPosts,
+    loadMore: loadMorePosts,
+    hasMore: hasMorePosts,
+  } = useMyPostsPagination();
 
-  const { isLoading: isLoadingPosts } = useGetMyPosts();
-  const { loadMore: loadMorePosts, hasMore: hasMorePosts } =
-    useLoadMoreMyPosts();
-
-  const { isLoading: isLoadingSaves } = useGetSaves(9);
-  const { loadMore: loadMoreSaves, hasMore: hasMoreSaves } =
-    useLoadMoreSaves();
+  const {
+    posts: savedPosts,
+    isLoading: isLoadingSaves,
+    isFetching: isFetchingSaves,
+    loadMore: loadMoreSaves,
+    hasMore: hasMoreSaves,
+  } = useSavesPagination();
 
   const postsObserverRef = useRef<IntersectionObserver | null>(null);
   const postsLoadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -31,11 +35,11 @@ const UserTabs = () => {
   const handlePostsObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasMorePosts && !isLoadingPosts) {
+      if (entry.isIntersecting && hasMorePosts && !isFetchingPosts) {
         loadMorePosts();
       }
     },
-    [hasMorePosts, isLoadingPosts, loadMorePosts]
+    [hasMorePosts, isFetchingPosts, loadMorePosts]
   );
 
   useEffect(() => {
@@ -59,11 +63,11 @@ const UserTabs = () => {
   const handleSavesObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasMoreSaves && !isLoadingSaves) {
+      if (entry.isIntersecting && hasMoreSaves && !isFetchingSaves) {
         loadMoreSaves();
       }
     },
-    [hasMoreSaves, isLoadingSaves, loadMoreSaves]
+    [hasMoreSaves, isFetchingSaves, loadMoreSaves]
   );
 
   useEffect(() => {
@@ -98,7 +102,7 @@ const UserTabs = () => {
         />
       </TabsList>
       <TabsContent value="gallery">
-        {isLoadingPosts && myPosts.length === 0 ? (
+        {isLoadingPosts ? (
           <div className="w-full flex-center h-40">
             <p>Loading...</p>
           </div>
@@ -106,7 +110,7 @@ const UserTabs = () => {
           <>
             <PostGrid posts={myPosts} />
             {hasMorePosts && <div ref={postsLoadMoreRef} className="h-10" />}
-            {isLoadingPosts && myPosts.length > 0 && (
+            {isFetchingPosts && myPosts.length > 0 && (
               <div className="w-full flex-center h-20">
                 <p>Loading more...</p>
               </div>
@@ -115,7 +119,7 @@ const UserTabs = () => {
         )}
       </TabsContent>
       <TabsContent value="saved">
-        {isLoadingSaves && savedPosts.length === 0 ? (
+        {isLoadingSaves ? (
           <div className="w-full flex-center h-40">
             <p>Loading...</p>
           </div>
@@ -123,7 +127,7 @@ const UserTabs = () => {
           <>
             <SaveGrid posts={savedPosts} />
             {hasMoreSaves && <div ref={savesLoadMoreRef} className="h-10" />}
-            {isLoadingSaves && savedPosts.length > 0 && (
+            {isFetchingSaves && savedPosts.length > 0 && (
               <div className="w-full flex-center h-20">
                 <p>Loading more...</p>
               </div>
