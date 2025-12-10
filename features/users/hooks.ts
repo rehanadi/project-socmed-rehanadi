@@ -16,7 +16,7 @@ export const useGetMyProfile = () => {
     queryFn: async () => {
       const response = await usersService.getMyProfile();
       
-      // Update auth state and localStorage
+      // Update user state
       const user = {
         id: response.data.profile.id,
         name: response.data.profile.name,
@@ -27,18 +27,6 @@ export const useGetMyProfile = () => {
       };
 
       dispatch(setUser(user));
-
-      // Update localStorage
-      if (typeof window !== 'undefined') {
-        const authData = localStorage.getItem('auth');
-        if (authData) {
-          const parsedAuth = JSON.parse(authData);
-          localStorage.setItem(
-            'auth',
-            JSON.stringify({ ...parsedAuth, user })
-          );
-        }
-      }
 
       return response.data;
     },
@@ -69,7 +57,7 @@ export const useUpdateProfile = () => {
     mutationFn: (payload: UpdateProfilePayload) =>
       usersService.updateProfile(payload),
     onSuccess: (response) => {
-      // Update auth state and localStorage
+      // Update user state
       const user = {
         id: response.data.id,
         name: response.data.name,
@@ -80,18 +68,6 @@ export const useUpdateProfile = () => {
       };
 
       dispatch(setUser(user));
-
-      // Update localStorage
-      if (typeof window !== 'undefined') {
-        const authData = localStorage.getItem('auth');
-        if (authData) {
-          const parsedAuth = JSON.parse(authData);
-          localStorage.setItem(
-            'auth',
-            JSON.stringify({ ...parsedAuth, user })
-          );
-        }
-      }
 
       // Invalidate all related queries
       queryClient.invalidateQueries({ queryKey: ['myProfile'] });

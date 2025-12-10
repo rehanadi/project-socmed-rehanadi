@@ -3,13 +3,22 @@
 import { Input } from '@/components/ui/input';
 import Logo from './logo';
 import Link from 'next/link';
-import { Menu, Search, X } from 'lucide-react';
+import { Menu, Search, X, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useAppSelector } from '@/lib/hooks';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { logout } from '@/features/auth/stores';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -17,6 +26,8 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const user = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -27,6 +38,11 @@ const Header = () => {
       setShowMenu(false);
     }
   }, [showSearch]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push('/login');
+  };
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 h-16 w-full gap-4 bg-black md:h-20 border-b border-neutral-900">
@@ -51,24 +67,51 @@ const Header = () => {
               <div className="flex-center gap-4">
                 <SearchIcon onClick={() => setShowSearch(true)} />
 
-                <Link
-                  href="/profile"
-                  className="flex-center gap-3.25 cursor-pointer"
-                >
-                  <Avatar className="size-10 md:size-12">
-                    <AvatarImage
-                      src={user?.avatarUrl || '/images/avatar.png'}
-                      className="aspect-square rounded-full object-cover"
-                    />
-                    <AvatarFallback>
-                      {user?.name || 'User'}
-                    </AvatarFallback>
-                  </Avatar>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex-center gap-3.25 cursor-pointer">
+                      <Avatar className="size-10 md:size-12">
+                        <AvatarImage
+                          src={user?.avatarUrl || '/images/avatar.png'}
+                          className="aspect-square rounded-full object-cover"
+                        />
+                        <AvatarFallback>{user?.name || 'User'}</AvatarFallback>
+                      </Avatar>
 
-                  <span className="text-md-bold hidden md:block">
-                    {user?.name || 'User'}
-                  </span>
-                </Link>
+                      <span className="text-md-bold hidden md:block">
+                        {user?.name || 'User'}
+                      </span>
+                    </div>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-3">
+                      <p className="font-semibold text-md">{user?.name}</p>
+                      <p className="text-sm text-neutral-400">
+                        @{user?.username}
+                      </p>
+                    </div>
+
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <User className="size-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      variant="destructive"
+                      className="cursor-pointer"
+                    >
+                      <LogOut className="size-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <>
