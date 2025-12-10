@@ -71,3 +71,25 @@ export interface UpdateProfileResponse {
     updatedAt: string;
   };
 }
+
+export interface SearchUser {
+  id: number;
+  username: string;
+  name: string;
+  avatarUrl: string | null;
+  isFollowedByMe: boolean;
+}
+
+export interface GetSearchUsersResponse {
+  success: boolean;
+  message: string;
+  data: {
+    users: SearchUser[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}

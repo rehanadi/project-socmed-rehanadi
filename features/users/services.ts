@@ -4,6 +4,7 @@ import {
   GetUserProfileResponse,
   UpdateProfilePayload,
   UpdateProfileResponse,
+  GetSearchUsersResponse,
 } from './types';
 import {
   API_ME_URL,
@@ -48,6 +49,18 @@ export const usersService = {
           'Content-Type': 'multipart/form-data',
         },
       }
+    );
+
+    return response.data;
+  },
+
+  getSearchUsers: async (
+    query: string,
+    page: number,
+    limit: number
+  ): Promise<GetSearchUsersResponse> => {
+    const response = await api.get<GetSearchUsersResponse>(
+      `${API_USERS_URL}/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`
     );
 
     return response.data;
