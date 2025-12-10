@@ -3,6 +3,7 @@ import {
   API_POSTS_URL,
   API_FEED_URL,
   API_ME_URL,
+  API_USERS_URL,
 } from '@/features/shared/constants/api-url';
 import {
   AddPostPayload,
@@ -54,7 +55,7 @@ export const postsService = {
     limit: number
   ): Promise<GetUserPostsResponse> => {
     const response = await api.get<GetUserPostsResponse>(
-      `/api/users/${username}/posts?page=${page}&limit=${limit}`
+      `${API_USERS_URL}/${username}/posts?page=${page}&limit=${limit}`
     );
 
     return response.data;

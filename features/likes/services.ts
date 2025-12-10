@@ -4,7 +4,10 @@ import {
   UnlikePostResponse,
   GetUserLikesResponse,
 } from './types';
-import { API_POSTS_URL } from '@/features/shared/constants/api-url';
+import {
+  API_POSTS_URL,
+  API_USERS_URL,
+} from '@/features/shared/constants/api-url';
 
 export const likesService = {
   addLike: async (postId: number): Promise<LikePostResponse> => {
@@ -29,7 +32,7 @@ export const likesService = {
     limit: number
   ): Promise<GetUserLikesResponse> => {
     const response = await api.get<GetUserLikesResponse>(
-      `/api/users/${username}/likes?page=${page}&limit=${limit}`
+      `${API_USERS_URL}/${username}/likes?page=${page}&limit=${limit}`
     );
 
     return response.data;

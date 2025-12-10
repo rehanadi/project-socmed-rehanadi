@@ -1,6 +1,9 @@
 import { api } from '@/lib/api';
 import { GetMyProfileResponse, GetUserProfileResponse } from './types';
-import { API_ME_URL } from '@/features/shared/constants/api-url';
+import {
+  API_ME_URL,
+  API_USERS_URL,
+} from '@/features/shared/constants/api-url';
 
 export const usersService = {
   getMyProfile: async (): Promise<GetMyProfileResponse> => {
@@ -13,7 +16,7 @@ export const usersService = {
     username: string
   ): Promise<GetUserProfileResponse> => {
     const response = await api.get<GetUserProfileResponse>(
-      `/api/users/${username}`
+      `${API_USERS_URL}/${username}`
     );
 
     return response.data;
