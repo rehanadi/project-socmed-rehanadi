@@ -6,6 +6,7 @@ import UserInfo from '@/features/users/components/user-info';
 import UserStatistics from '@/features/users/components/user-statistics';
 import UserTabs from './partials/user-tabs';
 import { useGetUserProfile } from '@/features/users/hooks';
+import FloatingMenus from "@/features/shared/components/floating-menus";
 
 const UserProfilePage = () => {
   const params = useParams();
@@ -59,6 +60,7 @@ const UserProfilePage = () => {
         username={username}
       />
       <UserTabs username={username} />
+      <FloatingMenus />
     </UserContainer>
   );
 };

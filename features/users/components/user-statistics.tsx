@@ -1,14 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { UserStats } from '../types';
 import ModalFollows from '@/features/follows/components/modal-follows';
-import {
-  useFollowersPagination,
-  useFollowingPagination,
-} from '@/features/follows/hooks';
+import { useFollowersPagination } from '@/features/follows/hooks/followers-pagination-hook';
+import { useFollowingPagination } from '@/features/follows/hooks/following-pagination-hook';
 
 interface UserStatisticsProps {
   stats: UserStats;
@@ -37,26 +34,22 @@ const UserStatistics = ({ stats, username }: UserStatisticsProps) => {
 
   return (
     <>
-      <div className="w-full h-full flex-between flex-wrap gap-6">
-        <StatisticItem count={stats.posts} label="Post" />
-
-        <Separator orientation="vertical" />
+      <div className="w-full flex items-center justify-between">
+        <StatisticItem count={stats.posts} label="Post" showBorder />
 
         <StatisticItem
           count={stats.followers}
           label="Followers"
           onClick={() => setIsFollowersOpen(true)}
+          showBorder
         />
-
-        <Separator orientation="vertical" />
 
         <StatisticItem
           count={stats.following}
           label="Following"
           onClick={() => setIsFollowingOpen(true)}
+          showBorder
         />
-
-        <Separator orientation="vertical" />
 
         <StatisticItem count={stats.likes} label="Likes" />
       </div>
@@ -92,15 +85,18 @@ const StatisticItem = ({
   count,
   label,
   onClick,
+  showBorder = false,
 }: {
   count: number;
   label: string;
   onClick?: () => void;
+  showBorder?: boolean;
 }) => {
   return (
     <div
       className={cn(
         'flex-1 flex flex-col items-center gap-0.5',
+        showBorder && 'border-r border-neutral-900',
         onClick
           ? 'cursor-pointer hover:text-neutral-400 transition-colors'
           : ''

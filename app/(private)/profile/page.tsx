@@ -1,5 +1,6 @@
 'use client';
 
+import FloatingMenus from "@/features/shared/components/floating-menus";
 import UserTabs from './partials/user-tabs';
 import UserContainer from '@/features/users/components/user-container';
 import UserInfo from '@/features/users/components/user-info';
@@ -39,6 +40,7 @@ const ProfilePage = () => {
         username={currentUser?.username || data.profile.username}
       />
       <UserTabs />
+      <FloatingMenus />
     </UserContainer>
   );
 };
