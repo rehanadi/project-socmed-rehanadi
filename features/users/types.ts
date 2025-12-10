@@ -48,3 +48,26 @@ export interface GetUserProfileResponse {
     isMe: boolean;
   };
 }
+
+export interface UpdateProfilePayload {
+  name: string;
+  username: string;
+  phone: string;
+  bio: string;
+  avatar?: File | null;
+}
+
+export interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    phone: string;
+    bio: string;
+    avatarUrl: string;
+    updatedAt: string;
+  };
+}

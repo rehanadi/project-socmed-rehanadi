@@ -4,7 +4,7 @@ import Link from "next/link"
 const EditProfileTitle = () => {
   return (
     <div className="flex-start gap-3">
-      <Link href="/">
+      <Link href="/profile">
         <ArrowLeft className="size-8" />
       </Link>
 
